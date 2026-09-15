@@ -1,111 +1,1103 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Chamado aberto</title>
+    <title>Chamado aberto - Amadeus System</title>
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
+
+        * {
+            box-sizing: border-box;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 100px auto;
-            padding: 20px;
+
+        body {
+            margin: 0;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f4f7fb;
+
+            color: #172b4d;
         }
+
+
+        /* =========================================
+           LAYOUT
+        ========================================== */
+
+        .layout {
+            display: flex;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           SIDEBAR
+        ========================================== */
+
+        .sidebar {
+            width: 210px;
+
+            background: linear-gradient(
+                180deg,
+                #102b4d 0%,
+                #0b213d 100%
+            );
+
+            color: white;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            padding: 25px 12px;
+
+            z-index: 100;
+        }
+
+
+        /* =========================================
+           LOGO
+        ========================================== */
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 5px 12px 30px;
+        }
+
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            background: #1478e8;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 23px;
+
+            flex-shrink: 0;
+        }
+
+
+        .logo-text {
+            font-size: 20px;
+
+            font-weight: bold;
+
+            line-height: 1.1;
+        }
+
+
+        /* =========================================
+           MENU
+        ========================================== */
+
+        .menu {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .menu a,
+        .menu-bottom a {
+            text-decoration: none;
+
+            color: #d8e5f5;
+
+            padding: 13px 14px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover,
+        .menu-bottom a:hover {
+            background: rgba(255,255,255,0.08);
+
+            color: white;
+        }
+
+
+        .menu a.ativo {
+            background: linear-gradient(
+                90deg,
+                #1478e8,
+                #1768c5
+            );
+
+            color: white;
+
+            box-shadow:
+                0 4px 12px rgba(20,120,232,0.25);
+        }
+
+
+        .menu-icon {
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 17px;
+
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================
+           MENU INFERIOR
+        ========================================== */
+
+        .menu-bottom {
+            position: absolute;
+
+            bottom: 25px;
+
+            left: 12px;
+            right: 12px;
+        }
+
+
+        /* =========================================
+           ÁREA PRINCIPAL
+        ========================================== */
+
+        .main {
+            margin-left: 210px;
+
+            width: calc(100% - 210px);
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           TOPBAR
+        ========================================== */
+
+        .topbar {
+            height: 58px;
+
+            background: white;
+
+            border-bottom: 1px solid #e5eaf0;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            padding: 0 35px;
+        }
+
+
+        .usuario {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color: #243b5a;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        .usuario-icon {
+            font-size: 19px;
+        }
+
+
+        /* =========================================
+           CONTEÚDO
+        ========================================== */
+
+        .conteudo {
+            max-width: 900px;
+
+            margin: 0 auto;
+
+            padding: 55px 35px;
+        }
+
+
+        /* =========================================
+           CARD DE SUCESSO
+        ========================================== */
 
         .card {
             background: white;
-            padding: 40px;
+
+            border: 1px solid #dce5ef;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 5px 20px rgba(24,55,90,0.07);
+
+            overflow: hidden;
+
             text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
         }
+
+
+        /* =========================================
+           CABEÇALHO
+        ========================================== */
+
+        .card-top {
+            padding: 35px 35px 25px;
+
+            border-bottom: 1px solid #e8edf3;
+        }
+
+
+        .sucesso-icon {
+            width: 64px;
+            height: 64px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            background: #e4f7ec;
+
+            color: #15905a;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+
+            font-weight: bold;
+        }
+
+
+        .card-top h1 {
+            margin: 0 0 8px;
+
+            color: #123b70;
+
+            font-size: 27px;
+        }
+
+
+        .card-top p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           INFORMAÇÕES
+        ========================================== */
+
+        .informacoes {
+            padding: 28px 35px;
+        }
+
 
         .numero {
-            font-size: 48px;
+            font-size: 42px;
+
             font-weight: bold;
-            margin: 25px 0;
+
+            color: #1478e8;
+
+            margin: 0 0 28px;
         }
 
-        .botao {
-            display: inline-block;
-            padding: 12px 20px;
-            background: #0d6efd;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 14px;
+
+            text-align: left;
         }
+
+
+        .info-item {
+            padding: 15px 17px;
+
+            background: #f7f9fc;
+
+            border: 1px solid #e6ebf1;
+
+            border-radius: 8px;
+        }
+
+
+        .info-label {
+            display: block;
+
+            margin-bottom: 6px;
+
+            color: #7a8da3;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+
+        .info-value {
+            color: #263b56;
+
+            font-size: 14px;
+
+            font-weight: 500;
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================== */
+
+        .status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        .status::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+        }
+
+
+        .status-aberto {
+            background: #dff7eb;
+
+            color: #07834e;
+        }
+
+
+        .status-aberto::before {
+            background: #0aa568;
+        }
+
+
+        .status-atendimento {
+            background: #fff1c9;
+
+            color: #a56a00;
+        }
+
+
+        .status-atendimento::before {
+            background: #f0a500;
+        }
+
+
+        .status-finalizado {
+            background: #e5efff;
+
+            color: #2364c4;
+        }
+
+
+        .status-finalizado::before {
+            background: #3478d4;
+        }
+
+
+        .status-padrao {
+            background: #edf1f5;
+
+            color: #596979;
+        }
+
+
+        .status-padrao::before {
+            background: #8492a2;
+        }
+
+
+        /* =========================================
+           AVISO
+        ========================================== */
+
+        .aviso {
+            margin: 0 35px 25px;
+
+            padding: 15px 18px;
+
+            background: #f5f8fc;
+
+            border: 1px solid #e0e7ef;
+
+            border-radius: 8px;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           AÇÕES
+        ========================================== */
+
+        .acoes {
+            padding: 25px 35px 35px;
+
+            border-top: 1px solid #e8edf3;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .botao {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 11px 18px;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+
+        .botao-principal {
+            background: #1478e8;
+
+            color: white;
+
+            box-shadow:
+                0 4px 10px rgba(20,120,232,0.20);
+        }
+
+
+        .botao-principal:hover {
+            background: #126bd0;
+
+            transform: translateY(-1px);
+        }
+
+
+        .botao-secundario {
+            background: white;
+
+            color: #31506f;
+
+            border: 1px solid #ccd7e3;
+        }
+
+
+        .botao-secundario:hover {
+            background: #f5f8fc;
+
+            border-color: #b8c7d7;
+        }
+
+
+        .botao-terciario {
+            background: #eef4fa;
+
+            color: #31506f;
+        }
+
+
+        .botao-terciario:hover {
+            background: #e3edf7;
+        }
+
+
+        /* =========================================
+           RESPONSIVIDADE
+        ========================================== */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+
+                padding: 20px 8px;
+            }
+
+
+            .logo {
+                justify-content: center;
+
+                padding: 5px 0 30px;
+            }
+
+
+            .logo-text {
+                display: none;
+            }
+
+
+            .menu a,
+            .menu-bottom a {
+                justify-content: center;
+
+                padding: 13px 8px;
+            }
+
+
+            .menu a span:not(.menu-icon),
+            .menu-bottom a span:not(.menu-icon) {
+                display: none;
+            }
+
+
+            .menu-icon {
+                font-size: 20px;
+            }
+
+
+            .main {
+                margin-left: 70px;
+
+                width: calc(100% - 70px);
+            }
+
+
+            .conteudo {
+                padding: 35px 20px;
+            }
+
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .card-top {
+                padding: 30px 20px 22px;
+            }
+
+
+            .informacoes {
+                padding: 22px 20px;
+            }
+
+
+            .aviso {
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+
+
+            .acoes {
+                padding-left: 20px;
+                padding-right: 20px;
+
+                flex-direction: column;
+            }
+
+
+            .botao {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .sidebar {
+                display: none;
+            }
+
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+
+            .conteudo {
+                padding: 20px 12px;
+            }
+
+
+            .card-top h1 {
+                font-size: 23px;
+            }
+
+
+            .numero {
+                font-size: 36px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-    <div class="card">
+<div class="layout">
 
-        <h1>Chamado aberto com sucesso!</h1>
 
-        <hr>
+    <!-- =========================================
+         MENU LATERAL
+    ========================================== -->
 
-        <p>
-            <strong>Número:</strong>
-            #{{ chamado.numero }}
-        </p>
+    <aside class="sidebar">
 
-        <p>
-            <strong>Setor:</strong>
-            {{ chamado.setor.nome }}
-        </p>
 
-        <p>
-            <strong>Local:</strong>
-            {{ chamado.local_cadastrado.nome }}
-        </p>
+        <div class="logo">
 
-        <p>
-            <strong>Status:</strong>
-            {{ chamado.get_status_display }}
-        </p>
+            <div class="logo-icon">
+                🎧
+            </div>
 
-        <p>
-            <strong>Data de abertura:</strong>
-            {{ chamado.data_abertura|date:"d/m/Y H:i" }}
-        </p>
+            <div class="logo-text">
+                Amadeus<br>
+                System
+            </div>
 
-        <hr>
+        </div>
 
-        <p>
-            Guarde o número do chamado para consultar o andamento.
-        </p>
 
-        <br>
+        <nav class="menu">
 
-        <a href="{% url 'consultar_chamado' chamado.numero %}">
-            CONSULTAR ESTE CHAMADO
-        </a>
 
-        <br><br>
+            <!-- INÍCIO -->
 
-        <a href="{% url 'inicio' %}">
-            Voltar para o início
-        </a>
+            <a href="{% url 'inicio' %}" class="ativo">
 
-        <br><br>
+                <span class="menu-icon">
+                    ⌂
+                </span>
 
-        <a href="{% url 'abrir_chamado' %}">
-            Abrir outro chamado
-        </a>
+                <span>
+                    Início
+                </span>
 
-    </div>
+            </a>
+
+
+            <!-- CHAMADOS -->
+
+            <a href="#">
+
+                <span class="menu-icon">
+                    ▤
+                </span>
+
+                <span>
+                    Chamados
+                </span>
+
+            </a>
+
+
+            <!-- NOVO CHAMADO -->
+
+            <a href="/abrir/">
+
+                <span class="menu-icon">
+                    ＋
+                </span>
+
+                <span>
+                    Novo Chamado
+                </span>
+
+            </a>
+
+
+            <!-- MEUS CHAMADOS -->
+
+            <a href="#">
+
+                <span class="menu-icon">
+                    ♙
+                </span>
+
+                <span>
+                    Meus Chamados
+                </span>
+
+            </a>
+
+
+            <!-- RELATÓRIOS -->
+
+            <a href="#">
+
+                <span class="menu-icon">
+                    ▥
+                </span>
+
+                <span>
+                    Relatórios
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- CONFIGURAÇÕES -->
+
+        <div class="menu-bottom">
+
+            <a href="#">
+
+                <span class="menu-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Configurações
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =========================================
+         ÁREA PRINCIPAL
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="usuario">
+
+                <span class="usuario-icon">
+                    ♟
+                </span>
+
+                <span>
+                    Usuário
+                </span>
+
+                <span>
+                    ⌄
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             CONTEÚDO
+        ========================================== -->
+
+        <div class="conteudo">
+
+
+            <div class="card">
+
+
+                <!-- =================================
+                     CABEÇALHO
+                ================================== -->
+
+                <div class="card-top">
+
+
+                    <div class="sucesso-icon">
+                        ✓
+                    </div>
+
+
+                    <h1>
+                        Chamado aberto com sucesso!
+                    </h1>
+
+
+                    <p>
+                        Seu chamado foi registrado no sistema.
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- =================================
+                     INFORMAÇÕES
+                ================================== -->
+
+                <div class="informacoes">
+
+
+                    <div class="numero">
+
+                        #{{ chamado.numero }}
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+
+                        <!-- SETOR -->
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Setor
+                            </span>
+
+                            <span class="info-value">
+                                {{ chamado.setor.nome }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- LOCAL -->
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Local
+                            </span>
+
+                            <span class="info-value">
+                                {{ chamado.local_cadastrado.nome }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Status
+                            </span>
+
+                            <span class="info-value">
+
+
+                                {% if chamado.status == "ABERTO" %}
+
+                                    <span class="status status-aberto">
+                                        {{ chamado.get_status_display }}
+                                    </span>
+
+
+                                {% elif chamado.status == "ATENDIMENTO" %}
+
+                                    <span class="status status-atendimento">
+                                        {{ chamado.get_status_display }}
+                                    </span>
+
+
+                                {% elif chamado.status == "FINALIZADO" %}
+
+                                    <span class="status status-finalizado">
+                                        {{ chamado.get_status_display }}
+                                    </span>
+
+
+                                {% else %}
+
+                                    <span class="status status-padrao">
+                                        {{ chamado.get_status_display }}
+                                    </span>
+
+                                {% endif %}
+
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- DATA -->
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                Data de abertura
+                            </span>
+
+                            <span class="info-value">
+                                {{ chamado.data_abertura|date:"d/m/Y H:i" }}
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================
+                     AVISO
+                ================================== -->
+
+                <div class="aviso">
+
+                    Guarde o número do chamado
+                    <strong>#{{ chamado.numero }}</strong>
+                    para consultar o andamento posteriormente.
+
+                </div>
+
+
+
+                <!-- =================================
+                     AÇÕES
+                ================================== -->
+
+                <div class="acoes">
+
+
+                    <a
+                        href="{% url 'consultar_chamado' chamado.numero %}"
+                        class="botao botao-principal"
+                    >
+
+                        CONSULTAR ESTE CHAMADO
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'abrir_chamado' %}"
+                        class="botao botao-terciario"
+                    >
+
+                        ABRIR OUTRO CHAMADO
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'inicio' %}"
+                        class="botao botao-secundario"
+                    >
+
+                        VOLTAR PARA O INÍCIO
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
 
 </div>
 
+
 </body>
+
 </html>

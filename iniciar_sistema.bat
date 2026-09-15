@@ -1,6 +1,6 @@
 @echo off
 
-cd /d C:\Users\Sussu\Documents\sistema-chamados
+cd /d C:\Sistema\sistema-chamados
 
 call venv\Scripts\activate
 

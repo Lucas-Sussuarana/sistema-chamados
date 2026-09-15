@@ -26,10 +26,11 @@ SECRET_KEY = 'django-insecure-ap(p!66kcm*4)z4p#==^5&ma@exd%#@sycfwwd!@b*39u53!u!
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "192.168.100.42",
+    "192.168.2.58",
     "localhost",
     "127.0.0.1",
     "retailers-stunning-mercy-gap.trycloudflare.com",
+    "SERVER-APP",
 ]
 
 

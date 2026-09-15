@@ -1,252 +1,1133 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sistema de Chamados</title>
+    <title>Novo Chamado - Amadeus System</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #222;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172b4d;
         }
 
-        .container {
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 20px;
+        /* =========================================
+           LAYOUT PRINCIPAL
+        ========================================= */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
         }
+
+
+        /* =========================================
+           MENU LATERAL
+        ========================================= */
+
+        .sidebar {
+            width: 210px;
+            background: linear-gradient(180deg, #102b4d 0%, #0b213d 100%);
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            padding: 25px 12px;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 12px 30px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #1478e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #d8e5f5;
+            padding: 13px 14px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .menu a.ativo {
+            background: linear-gradient(90deg, #1478e8, #1768c5);
+            color: white;
+            box-shadow: 0 4px 12px rgba(20,120,232,0.25);
+        }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .menu-bottom {
+            position: absolute;
+            bottom: 25px;
+            left: 12px;
+            right: 12px;
+        }
+
+
+        /* =========================================
+           ÁREA PRINCIPAL
+        ========================================= */
+
+        .main {
+            margin-left: 210px;
+            width: calc(100% - 210px);
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           TOPO
+        ========================================= */
+
+        .topbar {
+            height: 58px;
+            background: white;
+            border-bottom: 1px solid #e5eaf0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 35px;
+        }
+
+        .usuario {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #243b5a;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .usuario-icon {
+            font-size: 19px;
+        }
+
+
+        /* =========================================
+           CONTEÚDO
+        ========================================= */
+
+        .conteudo {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 35px;
+        }
+
+        .titulo-area {
+            margin-bottom: 25px;
+        }
+
+        .titulo-area h1 {
+            margin: 0 0 5px;
+            font-size: 30px;
+            color: #123b70;
+        }
+
+        .titulo-area p {
+            margin: 0;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+
+        /* =========================================
+           CARDS
+        ========================================= */
 
         .card {
             background: white;
-            padding: 35px;
+            border: 1px solid #dce5ef;
             border-radius: 10px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 3px 12px rgba(24, 55, 90, 0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
         }
 
-        h1 {
-            margin-top: 0;
-            text-align: center;
+        .card-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid #e6ebf1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .subtitulo {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
+        .card-header h2 {
+            margin: 0;
+            font-size: 19px;
+            color: #123b70;
+        }
+
+        .card-header-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: #e9f2ff;
+            color: #1478e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+
+        /* =========================================
+           FORMULÁRIO
+        ========================================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .campo {
+            margin-bottom: 4px;
+        }
+
+        .campo-full {
+            grid-column: 1 / -1;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
+            font-size: 14px;
             font-weight: bold;
+            color: #263b56;
         }
 
+        input[type="text"],
         select,
-        input,
         textarea {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
+            border: 1px solid #d3dce7;
+            border-radius: 7px;
+            padding: 12px 13px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            color: #263b56;
+            background: #fff;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #1478e8;
+            box-shadow: 0 0 0 3px rgba(20,120,232,0.10);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #94a3b8;
         }
 
         textarea {
-            min-height: 140px;
+            min-height: 150px;
             resize: vertical;
         }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 6px;
-            background: #0d6efd;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
+
+        /* =========================================
+           COMPUTADOR PADRÃO
+        ========================================= */
+
+        .padrao {
+            margin-top: 4px;
+            margin-bottom: 20px;
+            padding: 13px 15px;
+            background: #f6f9fd;
+            border: 1px solid #e1e8f0;
+            border-radius: 8px;
+        }
+
+        .padrao label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+            color: #43566e;
+        }
+
+        .padrao input {
+            width: 17px;
+            height: 17px;
+            accent-color: #1478e8;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #0b5ed7;
+
+        /* =========================================
+           BOTÕES
+        ========================================= */
+
+        .acoes {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
         }
+
+        .btn {
+            border: none;
+            border-radius: 7px;
+            padding: 13px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #1478e8;
+            color: white;
+            box-shadow: 0 3px 8px rgba(20,120,232,0.20);
+        }
+
+        .btn-primary:hover {
+            background: #0968d4;
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================
+           ERRO
+        ========================================= */
+
+        .erro {
+            background: #fff1f1;
+            border: 1px solid #ffcaca;
+            color: #b42318;
+            padding: 12px 15px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           TABELA
+        ========================================= */
+
+        .tabela-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        thead {
+            background: #122e50;
+            color: white;
+        }
+
+        th {
+            padding: 14px 15px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e8edf3;
+            font-size: 14px;
+            color: #334963;
+        }
+
+        tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .numero {
+            color: #0969da;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .numero:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================= */
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .status-aberto {
+            background: #dff7eb;
+            color: #07834e;
+        }
+
+        .status-aberto::before {
+            background: #0aa568;
+        }
+
+        .status-atendimento {
+            background: #fff1c9;
+            color: #a56a00;
+        }
+
+        .status-atendimento::before {
+            background: #f0a500;
+        }
+
+        .status-resolvido {
+            background: #e5efff;
+            color: #2364c4;
+        }
+
+        .status-resolvido::before {
+            background: #3478d4;
+        }
+
+
+        /* =========================================
+           ESTADO VAZIO
+        ========================================= */
+
+        .vazio {
+            text-align: center;
+            padding: 35px !important;
+            color: #7a8da3;
+        }
+
+
+        /* =========================================
+           RESPONSIVO
+        ========================================= */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .logo {
+                justify-content: center;
+                padding: 5px 0 30px;
+            }
+
+            .logo-text {
+                display: none;
+            }
+
+            .menu a {
+                justify-content: center;
+                padding: 13px 8px;
+            }
+
+            .menu a span:not(.menu-icon) {
+                display: none;
+            }
+
+            .menu-icon {
+                font-size: 20px;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+
+            .conteudo {
+                padding: 25px 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .campo-full {
+                grid-column: auto;
+            }
+
+            .titulo-area h1 {
+                font-size: 25px;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .conteudo {
+                padding: 20px 12px;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+
+            .acoes {
+                display: block;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<div class="container">
-
-    <div class="card">
-
-        <h1>Sistema de Chamados</h1>
-
-        <p class="subtitulo">
-            Abra um chamado informando os dados abaixo.
-        </p>
-        {% if erro %}
-            <p><strong>{{ erro }}</strong></p>
-        {% endif %}
-        <form method="post">
-            <label for="solicitante">Nome do solicitante</label>
-
-            <input
-                type="text"
-                name="solicitante"
-                id="solicitante"
-                maxlength="150"
-                placeholder="Digite seu nome"
-                required
-            >
-            {% csrf_token %}
-            <label>
-                <input
-                    type="checkbox"
-                    id="usar_padrao"
-                >
-            Usar este computador como padrão
-            </label>
-
-            <label for="setor">
-                Setor
-            </label>
-
-            <select name="setor" id="setor" required>
-
-                <option value="">
-                    Selecione o setor
-                </option>
-
-                {% for setor in setores %}
-
-                    <option value="{{ setor.id }}">
-                        {{ setor.nome }}
-                    </option>
-
-                {% endfor %}
-
-            </select>
+<div class="layout">
 
 
-            <label for="local">Local</label>
+    <!-- =========================================
+         MENU LATERAL
+    ========================================== -->
 
-            <select name="local" id="local" required>
-                <option value="">Selecione o local</option>
+    <aside class="sidebar">
 
-                {% for local in locais %}
-                    <option value="{{ local.id }}">
-                        {{ local.nome }}
-                    </option>
-                {% endfor %}
-            </select>
+        <div class="logo">
 
+            <div class="logo-icon">
+                🎧
+            </div>
 
-            <label for="descricao">
-                Descrição
-            </label>
+            <div class="logo-text">
+                Amadeus<br>
+                System
+            </div>
 
-            <textarea
-                name="descricao"
-                id="descricao"
-                placeholder="Descreva o problema ou solicitação..."
-                required
-            ></textarea>
+        </div>
 
 
-            <button type="submit">
-                ABRIR CHAMADO
-            </button>
+        <nav class="menu">
 
-        </form>
-        <hr>
+            <a href="{% url 'inicio' %}" class="ativo">
+                <span class="menu-icon">⌂</span>
+                <span>Início</span>
+            </a>
 
-<h2>Chamados em aberto</h2>
+            <a href="/abrir/" class="ativo">
+                <span class="menu-icon">＋</span>
+                <span>Novo Chamado</span>
+            </a>
 
-<table border="1" cellpadding="8" cellspacing="0" width="100%">
-    <thead>
-        <tr>
-            <th>Número</th>
-            <th>Setor</th>
-            <th>Local</th>
-            <th>Data</th>
-            <th>Status</th>
-        </tr>
-    </thead>
+        </nav>
 
-    <tbody>
-        {% for chamado in chamados %}
-        <tr>
-            <td>
-                <a href="{% url 'consultar_chamado' chamado.numero %}">
-                    #{{ chamado.numero }}
-                </a>
-            </td>
 
-            <td>{{ chamado.setor.nome }}</td>
+    </aside>
 
-            <td>{{ chamado.local_cadastrado.nome }}</td>
 
-            <td>{{ chamado.data_abertura|date:"d/m/Y H:i" }}</td>
 
-            <td>{{ chamado.get_status_display }}</td>
-        </tr>
+    <!-- =========================================
+         ÁREA PRINCIPAL
+    ========================================== -->
 
-        {% empty %}
-        <tr>
-            <td colspan="5">
-                Nenhum chamado em aberto.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <main class="main">
 
-    </div>
+
+        <!-- TOPO -->
+
+        <header class="topbar">
+
+            <div class="usuario">
+
+                <span>
+                    Usuário
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- CONTEÚDO -->
+
+        <div class="conteudo">
+
+
+            <!-- TÍTULO -->
+
+            <div class="titulo-area">
+
+                <h1>
+                    Novo chamado
+                </h1>
+
+                <p>
+                    Abra um chamado informando os dados abaixo.
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================
+                 FORMULÁRIO
+            ================================== -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <div class="card-header-icon">
+                        ＋
+                    </div>
+
+                    <h2>
+                        Abrir chamado
+                    </h2>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    {% if erro %}
+
+                        <div class="erro">
+
+                            <strong>
+                                {{ erro }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+
+                        <div class="form-grid">
+
+
+                            <!-- SOLICITANTE -->
+
+                            <div class="campo campo-full">
+
+                                <label for="solicitante">
+
+                                    Nome do solicitante
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="solicitante"
+                                    id="solicitante"
+                                    maxlength="150"
+                                    placeholder="Digite seu nome"
+                                    required
+                                >
+
+                            </div>
+
+
+
+                            <!-- COMPUTADOR PADRÃO -->
+
+                            <div class="campo campo-full">
+
+                                <div class="padrao">
+
+                                    <label>
+
+                                        <input
+                                            type="checkbox"
+                                            id="usar_padrao"
+                                        >
+
+                                        Usar este computador como padrão
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- SETOR -->
+
+                            <div class="campo">
+
+                                <label for="setor">
+
+                                    Setor
+
+                                </label>
+
+                                <select
+                                    name="setor"
+                                    id="setor"
+                                    required
+                                >
+
+                                    <option value="">
+
+                                        Selecione o setor
+
+                                    </option>
+
+
+                                    {% for setor in setores %}
+
+                                        <option value="{{ setor.id }}">
+
+                                            {{ setor.nome }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- LOCAL -->
+
+                            <div class="campo">
+
+                                <label for="local">
+
+                                    Local
+
+                                </label>
+
+                                <select
+                                    name="local"
+                                    id="local"
+                                    required
+                                >
+
+                                    <option value="">
+
+                                        Selecione o local
+
+                                    </option>
+
+
+                                    {% for local in locais %}
+
+                                        <option value="{{ local.id }}">
+
+                                            {{ local.nome }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- DESCRIÇÃO -->
+
+                            <div class="campo campo-full">
+
+                                <label for="descricao">
+
+                                    Descrição
+
+                                </label>
+
+                                <textarea
+                                    name="descricao"
+                                    id="descricao"
+                                    placeholder="Descreva o problema ou solicitação..."
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- BOTÃO -->
+
+                        <div class="acoes">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+
+                                ABRIR CHAMADO
+
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 CHAMADOS EM ABERTO
+            ================================== -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <div class="card-header-icon">
+                        ▤
+                    </div>
+
+                    <h2>
+                        Chamados em aberto
+                    </h2>
+
+                </div>
+
+
+
+                <div class="tabela-container">
+
+
+                    <table>
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Número
+                                </th>
+
+                                <th>
+                                    Setor
+                                </th>
+
+                                <th>
+                                    Local
+                                </th>
+
+                                <th>
+                                    Data
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                            {% for chamado in chamados %}
+
+                            <tr>
+
+
+                                <td>
+
+                                    <a
+                                        class="numero"
+                                        href="{% url 'consultar_chamado' chamado.numero %}"
+                                    >
+
+                                        #{{ chamado.numero }}
+
+                                    </a>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ chamado.setor.nome }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ chamado.local_cadastrado.nome }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ chamado.data_abertura|date:"d/m/Y H:i" }}
+
+                                </td>
+
+
+                                <td>
+
+
+                                    {% if chamado.status == "ABERTO" %}
+
+                                        <span class="status status-aberto">
+
+                                            Aberto
+
+                                        </span>
+
+
+                                    {% elif chamado.status == "ATENDIMENTO" %}
+
+                                        <span class="status status-atendimento">
+
+                                            Em atendimento
+
+                                        </span>
+
+
+                                    {% else %}
+
+                                        <span class="status status-resolvido">
+
+                                            {{ chamado.get_status_display }}
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% empty %}
+
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    class="vazio"
+                                >
+
+                                    Nenhum chamado em aberto.
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
 
 </div>
+
+
+
+<!-- =========================================
+     JAVASCRIPT
+     MANTIDO IGUAL AO ORIGINAL
+========================================== -->
+
 <script>
+
     const setor = document.getElementById("setor");
+
     const local = document.getElementById("local");
+
     const usarPadrao = document.getElementById("usar_padrao");
 
+
     // Recupera o padrão salvo neste computador
-    const setorPadrao = localStorage.getItem("chamado_setor_padrao");
-    const localPadrao = localStorage.getItem("chamado_local_padrao");
+
+    const setorPadrao =
+        localStorage.getItem("chamado_setor_padrao");
+
+    const localPadrao =
+        localStorage.getItem("chamado_local_padrao");
+
+
+    // Se existir um padrão salvo, aplica
 
     if (setorPadrao) {
+
         setor.value = setorPadrao;
+
     }
+
 
     if (localPadrao) {
+
         local.value = localPadrao;
+
     }
+
 
     // Se existe um padrão salvo, mantém a caixa marcada
+
     if (setorPadrao || localPadrao) {
+
         usarPadrao.checked = true;
+
     }
 
+
     // Salva ou remove o padrão
+
     usarPadrao.addEventListener("change", function () {
 
         if (this.checked) {
-            localStorage.setItem("chamado_setor_padrao", setor.value);
-            localStorage.setItem("chamado_local_padrao", local.value);
+
+            localStorage.setItem(
+                "chamado_setor_padrao",
+                setor.value
+            );
+
+            localStorage.setItem(
+                "chamado_local_padrao",
+                local.value
+            );
+
         } else {
-            localStorage.removeItem("chamado_setor_padrao");
-            localStorage.removeItem("chamado_local_padrao");
+
+            localStorage.removeItem(
+                "chamado_setor_padrao"
+            );
+
+            localStorage.removeItem(
+                "chamado_local_padrao"
+            );
+
         }
 
     });
+
 </script>
+
+
 </body>
+
 </html>

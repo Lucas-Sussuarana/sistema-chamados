@@ -1,144 +1,1487 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Chamados</title>
+
+    <title>Sistema de Chamados - Amadeus System</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f4f7fb;
+
+            color: #172b4d;
+        }
+
+
+        /* =========================================
+           LAYOUT
+        ========================================= */
+
+        .layout {
+            display: flex;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           MENU LATERAL
+        ========================================= */
+
+        .sidebar {
+            width: 210px;
+
+            background: linear-gradient(
+                180deg,
+                #102b4d 0%,
+                #0b213d 100%
+            );
+
+            color: white;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            padding: 25px 12px;
+
+            z-index: 100;
+        }
+
+
+        /* =========================================
+           LOGO
+        ========================================= */
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 5px 12px 30px;
+        }
+
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            background: #1478e8;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 23px;
+
+            flex-shrink: 0;
+        }
+
+
+        .logo-text {
+            font-size: 20px;
+
+            font-weight: bold;
+
+            line-height: 1.1;
+        }
+
+
+        /* =========================================
+           MENU
+        ========================================= */
+
+        .menu {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .menu a {
+            text-decoration: none;
+
+            color: #d8e5f5;
+
+            padding: 13px 14px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover {
+            background: rgba(255,255,255,0.08);
+
+            color: white;
+        }
+
+
+        .menu a.ativo {
+            background: linear-gradient(
+                90deg,
+                #1478e8,
+                #1768c5
+            );
+
+            color: white;
+
+            box-shadow:
+                0 4px 12px rgba(20,120,232,0.25);
+        }
+
+
+        .menu-icon {
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 17px;
+
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================
+           MENU INFERIOR
+        ========================================= */
+
+        .menu-bottom {
+            position: absolute;
+
+            bottom: 25px;
+
+            left: 12px;
+            right: 12px;
+        }
+
+
+        .menu-bottom a {
+            text-decoration: none;
+
+            color: #d8e5f5;
+
+            padding: 13px 14px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+
+        .menu-bottom a:hover {
+            background: rgba(255,255,255,0.08);
+
+            color: white;
+        }
+
+
+        /* =========================================
+           ÁREA PRINCIPAL
+        ========================================= */
+
+        .main {
+            margin-left: 210px;
+
+            width: calc(100% - 210px);
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           TOPO
+        ========================================= */
+
+        .topbar {
+            height: 58px;
+
+            background: white;
+
+            border-bottom: 1px solid #e5eaf0;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            padding: 0 35px;
+        }
+
+
+        .usuario {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color: #243b5a;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        .usuario-icon {
+            font-size: 19px;
+        }
+
+
+        /* =========================================
+           CONTEÚDO
+        ========================================= */
+
+        .conteudo {
+            max-width: 1250px;
+
+            margin: 0 auto;
+
+            padding: 35px;
+        }
+
+
+        /* =========================================
+           TÍTULO
+        ========================================= */
+
+        .titulo-area {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            margin-bottom: 25px;
+
+            gap: 20px;
+        }
+
+
+        .titulo-area h1 {
+            margin: 0 0 5px;
+
+            font-size: 30px;
+
+            color: #123b70;
+        }
+
+
+        .titulo-area p {
+            margin: 0;
+
+            color: #64748b;
+
+            font-size: 15px;
+        }
+
+
+        /* =========================================
+           BOTÃO NOVO CHAMADO
+        ========================================= */
+
+        .acoes-topo {
+            display: flex;
+
+            justify-content: flex-end;
+
+            margin-bottom: 20px;
+        }
+
+
+        .btn-novo {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 11px 18px;
+
+            background: #1478e8;
+
+            color: white;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 4px 10px rgba(20,120,232,0.20);
+
+            transition: 0.2s;
+        }
+
+
+        .btn-novo:hover {
+            background: #126bd0;
+
+            transform: translateY(-1px);
+        }
+
+
+        .btn-novo-icon {
+            font-size: 18px;
+
+            line-height: 1;
+        }
+
+
+        /* =========================================
+           CARD
+        ========================================= */
+
+        .card {
+            background: white;
+
+            border: 1px solid #dce5ef;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 3px 12px rgba(24,55,90,0.05);
+
+            margin-bottom: 25px;
+
+            overflow: hidden;
+        }
+
+
+        /* =========================================
+           CABEÇALHO DO CARD
+        ========================================= */
+
+        .card-header {
+            padding: 18px 22px;
+
+            border-bottom: 1px solid #e6ebf1;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .card-header h2 {
+            margin: 0;
+
+            font-size: 19px;
+
+            color: #123b70;
+        }
+
+
+        .card-header-icon {
+            width: 36px;
+            height: 36px;
+
+            border-radius: 8px;
+
+            background: #e9f2ff;
+
+            color: #1478e8;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 18px;
+        }
+
+
+        .card-body {
+            padding: 25px;
+        }
+
+
+        /* =========================================
+           FILTROS
+        ========================================= */
+
+        .filtros-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            align-items: end;
+        }
+
+
+        .campo {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .campo label {
+            display: block;
+
+            font-size: 12px;
+
+            color: #7a8da3;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+
+        .campo select,
+        .campo input {
+            width: 100%;
+
+            height: 40px;
+
+            padding: 0 11px;
+
+            border: 1px solid #ccd7e3;
+
+            border-radius: 7px;
+
+            background: white;
+
+            color: #263b56;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: 0.2s;
+        }
+
+
+        .campo select:focus,
+        .campo input:focus {
+            border-color: #1478e8;
+
+            box-shadow:
+                0 0 0 3px rgba(20,120,232,0.10);
+        }
+
+
+        .campo-pesquisa {
+            grid-column: span 2;
+        }
+
+
+        .botao-filtrar {
+            height: 40px;
+
+            padding: 0 22px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #1478e8;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .botao-filtrar:hover {
+            background: #126bd0;
+        }
+
+
+        /* =========================================
+           TABELA
+        ========================================= */
+
+        .tabela-header {
+            padding: 18px 22px;
+
+            border-bottom: 1px solid #e6ebf1;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .tabela-header h2 {
+            margin: 0;
+
+            font-size: 19px;
+
+            color: #123b70;
+        }
+
+
+        .contador {
+            color: #7a8da3;
+
+            font-size: 13px;
+        }
+
+
+        .tabela-container {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 800px;
+        }
+
+
+        thead {
+            background: #122e50;
+        }
+
+
+        th {
+            padding: 14px 16px;
+
+            color: white;
+
+            text-align: left;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        td {
+            padding: 14px 16px;
+
+            border-bottom: 1px solid #edf1f5;
+
+            color: #40556e;
+
+            font-size: 14px;
+
+            white-space: nowrap;
+        }
+
+
+        tbody tr {
+            transition: 0.15s;
+        }
+
+
+        tbody tr:hover {
+            background: #f7f9fc;
+        }
+
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =========================================
+           LINK DO NÚMERO
+        ========================================= */
+
+        .numero-chamado {
+            color: #1478e8;
+
+            font-weight: bold;
+
+            text-decoration: none;
+        }
+
+
+        .numero-chamado:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================= */
+
+        .status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        .status::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+        }
+
+
+        .status-aberto {
+            background: #dff7eb;
+
+            color: #07834e;
+        }
+
+
+        .status-aberto::before {
+            background: #0aa568;
+        }
+
+
+        .status-atendimento {
+            background: #fff1c9;
+
+            color: #a56a00;
+        }
+
+
+        .status-atendimento::before {
+            background: #f0a500;
+        }
+
+
+        .status-finalizado {
+            background: #e5efff;
+
+            color: #2364c4;
+        }
+
+
+        .status-finalizado::before {
+            background: #3478d4;
+        }
+
+
+        .status-padrao {
+            background: #edf1f5;
+
+            color: #596979;
+        }
+
+
+        .status-padrao::before {
+            background: #8492a2;
+        }
+
+
+        /* =========================================
+           ESTADO VAZIO
+        ========================================= */
+
+        .vazio {
+            text-align: center;
+
+            padding: 45px 20px !important;
+
+            color: #7a8da3;
+
+            font-size: 14px;
+        }
+
+
+        .vazio-icone {
+            font-size: 25px;
+
+            margin-bottom: 10px;
+
+            color: #8492a2;
+        }
+
+
+        /* =========================================
+           RESPONSIVO
+        ========================================= */
+
+        @media (max-width: 1000px) {
+
+            .filtros-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .campo-pesquisa {
+                grid-column: span 2;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+
+                padding: 20px 8px;
+            }
+
+
+            .logo {
+                justify-content: center;
+
+                padding: 5px 0 30px;
+            }
+
+
+            .logo-text {
+                display: none;
+            }
+
+
+            .menu a {
+                justify-content: center;
+
+                padding: 13px 8px;
+            }
+
+
+            .menu a span:not(.menu-icon) {
+                display: none;
+            }
+
+
+            .menu-bottom a {
+                justify-content: center;
+
+                padding: 13px 8px;
+            }
+
+
+            .menu-bottom a span:not(.menu-icon) {
+                display: none;
+            }
+
+
+            .menu-icon {
+                font-size: 20px;
+            }
+
+
+            .main {
+                margin-left: 70px;
+
+                width: calc(100% - 70px);
+            }
+
+
+            .conteudo {
+                padding: 25px 18px;
+            }
+
+
+            .titulo-area h1 {
+                font-size: 25px;
+            }
+
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .filtros-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .campo-pesquisa {
+                grid-column: span 1;
+            }
+
+
+            .acoes-topo {
+                justify-content: stretch;
+            }
+
+
+            .btn-novo {
+                width: 100%;
+
+                justify-content: center;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .sidebar {
+                display: none;
+            }
+
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+
+            .conteudo {
+                padding: 20px 12px;
+            }
+
+
+            .card-body {
+                padding: 18px;
+            }
+
+
+            .titulo-area {
+                display: block;
+            }
+
+
+            .titulo-area h1 {
+                font-size: 23px;
+            }
+
+
+            .tabela-header {
+                padding: 16px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
 
-    <h1>Amadeus Sytem</h1>
 
-    <p>VELHO BOIOLA.</p>
+<div class="layout">
 
-    <a href="/abrir/">
-        Abrir chamado
-    </a>
-    <hr>
 
-    <form method="get">
+    <!-- =========================================
+         MENU LATERAL
+    ========================================== -->
 
-        <label for="setor">Filtrar por Setor:</label>
+    <aside class="sidebar">
 
-        <select name="setor" id="setor">
-            <option value="">Todos os setores</option>
 
-            {% for setor in setores %}
-                <option value="{{ setor.id }}"
-                    {% if request.GET.setor == setor.id|stringformat:"s" %}
-                        selected
-                    {% endif %}
+        <div class="logo">
+
+            <div class="logo-icon">
+                🎧
+            </div>
+
+            <div class="logo-text">
+                Amadeus<br>
+                System
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+
+            <!-- INÍCIO -->
+
+            <a href="{% url 'inicio' %}" class="ativo">
+
+                <span class="menu-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Início
+                </span>
+
+            </a>
+
+
+            <!-- NOVO CHAMADO -->
+
+            <a href="/abrir/">
+
+                <span class="menu-icon">
+                    ＋
+                </span>
+
+                <span>
+                    Novo Chamado
+                </span>
+
+            </a>
+
+        </nav>
+
+
+    </aside>
+
+
+
+    <!-- =========================================
+         ÁREA PRINCIPAL
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPO -->
+
+        <header class="topbar">
+
+            <div class="usuario">
+
+
+                <span>
+                    Usuário
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             CONTEÚDO
+        ========================================== -->
+
+        <div class="conteudo">
+
+
+            <!-- TÍTULO -->
+
+            <div class="titulo-area">
+
+                <div>
+
+                    <h1>
+                        Chamados
+                    </h1>
+
+                    <p>
+                        Consulte, filtre e acompanhe os chamados do suporte.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BOTÃO NOVO CHAMADO -->
+
+            <div class="acoes-topo">
+
+                <a
+                    href="/abrir/"
+                    class="btn-novo"
                 >
-                    {{ setor.nome }}
-                </option>
-                
-            {% endfor %}
-        </select>
 
-        <label for="local">Filtrar por Local:</label>
+                    <span class="btn-novo-icon">
+                        ＋
+                    </span>
 
-        <select name="local" id="local">
-            <option value="">Todos os locais</option>
+                    Abrir novo chamado
 
-            {% for local in locais %}
-                <option value="{{ local.id }}"
-                    {% if request.GET.local == local.id|stringformat:"s" %}
-                        selected
-                    {% endif %}
-                >
-                    {{ local.nome }}
-                </option>
-            {% endfor %}
-        </select>
+                </a>
 
-        <label for="status">Filtrar por Status:</label>
+            </div>
 
-        <select name="status" id="status">
 
-            <option value="abertos"
-                {% if request.GET.status == "abertos" or not request.GET.status %}
-                    selected
-                {% endif %}
-            >
-                Em aberto e atendimento
-            </option>
 
-            <option value="finalizados"
-                {% if request.GET.status == "finalizados" %}
-                    selected
-                {% endif %}
-            >
-                Finalizados
-            </option>
+            <!-- =========================================
+                 FILTROS
+            ========================================== -->
 
-            <option value="todos"
-                {% if request.GET.status == "todos" %}
-                    selected
-                {% endif %}
-            >
-                Todos
-            </option>
+            <div class="card">
 
-        </select>
 
-        <label for="solicitante">Pesquisar por nome:</label>
+                <div class="card-header">
 
-        <input
-            type="text"
-            name="solicitante"
-            id="solicitante"
-            value="{{ request.GET.solicitante }}"
-            placeholder="Digite o nome do solicitante"
-        >
+                    <div class="card-header-icon">
+                        ⌕
+                    </div>
 
-        <button type="submit">FILTRAR</button>
+                    <h2>
+                        Filtros de pesquisa
+                    </h2>
 
-    </form>
+                </div>
 
-    <h2>Chamados em aberto</h2>
-    
-<br>
 
-    <table border="1" cellpadding="8" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Número</th>
-                <th>Solicitante</th>
-                <th>Setor</th>
-                <th>Local</th>
-                <th>Data</th>
-                <th>Status</th>
-            </tr>
-        </thead>
+                <div class="card-body">
 
-        <tbody>
-            {% for chamado in chamados %}
-            <tr>
-                <td>
-                    <a href="{% url 'consultar_chamado' chamado.numero %}">
-                        #{{ chamado.numero }}
-                    </a>
-                </td>
-                <td>{{ chamado.solicitante }}</td>
 
-                <td>{{ chamado.setor.nome }}</td>
+                    <form method="get">
 
-                <td>{{ chamado.local_cadastrado.nome }}</td>
+                        <div class="filtros-grid">
 
-                <td>{{ chamado.data_abertura|date:"d/m/Y H:i" }}</td>
 
-                <td>{{ chamado.get_status_display }}</td>
-            </tr>
+                            <!-- SETOR -->
 
-            {% empty %}
-            <tr>
-                <td colspan="6">
-                    Nenhum chamado em aberto.
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                            <div class="campo">
+
+                                <label for="setor">
+                                    Filtrar por Setor
+                                </label>
+
+                                <select
+                                    name="setor"
+                                    id="setor"
+                                >
+
+                                    <option value="">
+                                        Todos os setores
+                                    </option>
+
+
+                                    {% for setor in setores %}
+
+                                        <option
+                                            value="{{ setor.id }}"
+                                            {% if request.GET.setor == setor.id|stringformat:"s" %}
+                                                selected
+                                            {% endif %}
+                                        >
+
+                                            {{ setor.nome }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- LOCAL -->
+
+                            <div class="campo">
+
+                                <label for="local">
+                                    Filtrar por Local
+                                </label>
+
+                                <select
+                                    name="local"
+                                    id="local"
+                                >
+
+                                    <option value="">
+                                        Todos os locais
+                                    </option>
+
+
+                                    {% for local in locais %}
+
+                                        <option
+                                            value="{{ local.id }}"
+                                            {% if request.GET.local == local.id|stringformat:"s" %}
+                                                selected
+                                            {% endif %}
+                                        >
+
+                                            {{ local.nome }}
+
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- STATUS -->
+
+                            <div class="campo">
+
+                                <label for="status">
+                                    Filtrar por Status
+                                </label>
+
+                                <select
+                                    name="status"
+                                    id="status"
+                                >
+
+                                    <option
+                                        value="abertos"
+
+                                        {% if request.GET.status == "abertos" or not request.GET.status %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        Em aberto e atendimento
+
+                                    </option>
+
+
+                                    <option
+                                        value="finalizados"
+
+                                        {% if request.GET.status == "finalizados" %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        Finalizados
+
+                                    </option>
+
+
+                                    <option
+                                        value="todos"
+
+                                        {% if request.GET.status == "todos" %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        Todos
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- PESQUISA POR NOME -->
+
+                            <div class="campo campo-pesquisa">
+
+                                <label for="solicitante">
+                                    Pesquisar por nome
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="solicitante"
+                                    id="solicitante"
+                                    value="{{ request.GET.solicitante }}"
+                                    placeholder="Digite o nome do solicitante"
+                                >
+
+                            </div>
+
+
+
+                            <!-- BOTÃO -->
+
+                            <div class="campo">
+
+                                <button
+                                    type="submit"
+                                    class="botao-filtrar"
+                                >
+
+                                    FILTRAR
+
+                                </button>
+
+                            </div>
+
+
+                        </div>
+
+                    </form>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================================
+                 TABELA DE CHAMADOS
+            ========================================== -->
+
+            <div class="card">
+
+
+                <div class="tabela-header">
+
+                    <h2>
+                        Chamados em aberto
+                    </h2>
+
+                    <span class="contador">
+                        Lista de chamados
+                    </span>
+
+                </div>
+
+
+
+                <div class="tabela-container">
+
+                    <table>
+
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Número
+                                </th>
+
+                                <th>
+                                    Solicitante
+                                </th>
+
+                                <th>
+                                    Setor
+                                </th>
+
+                                <th>
+                                    Local
+                                </th>
+
+                                <th>
+                                    Data
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+
+                        <tbody>
+
+
+                            {% for chamado in chamados %}
+
+                            <tr>
+
+
+                                <!-- NÚMERO -->
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'consultar_chamado' chamado.numero %}"
+                                        class="numero-chamado"
+                                    >
+
+                                        #{{ chamado.numero }}
+
+                                    </a>
+
+                                </td>
+
+
+                                <!-- SOLICITANTE -->
+
+                                <td>
+                                    {{ chamado.solicitante }}
+                                </td>
+
+
+                                <!-- SETOR -->
+
+                                <td>
+                                    {{ chamado.setor.nome }}
+                                </td>
+
+
+                                <!-- LOCAL -->
+
+                                <td>
+                                    {{ chamado.local_cadastrado.nome }}
+                                </td>
+
+
+                                <!-- DATA -->
+
+                                <td>
+                                    {{ chamado.data_abertura|date:"d/m/Y H:i" }}
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+
+                                    {% if chamado.status == "ABERTO" %}
+
+                                        <span class="status status-aberto">
+
+                                            {{ chamado.get_status_display }}
+
+                                        </span>
+
+
+                                    {% elif chamado.status == "ATENDIMENTO" %}
+
+                                        <span class="status status-atendimento">
+
+                                            {{ chamado.get_status_display }}
+
+                                        </span>
+
+
+                                    {% elif chamado.status == "FINALIZADO" %}
+
+                                        <span class="status status-finalizado">
+
+                                            {{ chamado.get_status_display }}
+
+                                        </span>
+
+
+                                    {% else %}
+
+                                        <span class="status status-padrao">
+
+                                            {{ chamado.get_status_display }}
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% empty %}
+
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="vazio"
+                                >
+
+                                    <div class="vazio-icone">
+                                        ▤
+                                    </div>
+
+                                    Nenhum chamado em aberto.
+
+                                </td>
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
 
 </body>
+
 </html>
