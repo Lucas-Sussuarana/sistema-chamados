@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Chamados</title>
+</head>
+<body>
+
+    <h1>Amadeus Sytem</h1>
+
+    <p>VELHO BOIOLA.</p>
+
+    <a href="/abrir/">
+        Abrir chamado
+    </a>
+    <hr>
+
+    <form method="get">
+
+        <label for="setor">Filtrar por Setor:</label>
+
+        <select name="setor" id="setor">
+            <option value="">Todos os setores</option>
+
+            {% for setor in setores %}
+                <option value="{{ setor.id }}"
+                    {% if request.GET.setor == setor.id|stringformat:"s" %}
+                        selected
+                    {% endif %}
+                >
+                    {{ setor.nome }}
+                </option>
+                
+            {% endfor %}
+        </select>
+
+        <label for="local">Filtrar por Local:</label>
+
+        <select name="local" id="local">
+            <option value="">Todos os locais</option>
+
+            {% for local in locais %}
+                <option value="{{ local.id }}"
+                    {% if request.GET.local == local.id|stringformat:"s" %}
+                        selected
+                    {% endif %}
+                >
+                    {{ local.nome }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="status">Filtrar por Status:</label>
+
+        <select name="status" id="status">
+
+            <option value="abertos"
+                {% if request.GET.status == "abertos" or not request.GET.status %}
+                    selected
+                {% endif %}
+            >
+                Em aberto e atendimento
+            </option>
+
+            <option value="finalizados"
+                {% if request.GET.status == "finalizados" %}
+                    selected
+                {% endif %}
+            >
+                Finalizados
+            </option>
+
+            <option value="todos"
+                {% if request.GET.status == "todos" %}
+                    selected
+                {% endif %}
+            >
+                Todos
+            </option>
+
+        </select>
+
+        <label for="solicitante">Pesquisar por nome:</label>
+
+        <input
+            type="text"
+            name="solicitante"
+            id="solicitante"
+            value="{{ request.GET.solicitante }}"
+            placeholder="Digite o nome do solicitante"
+        >
+
+        <button type="submit">FILTRAR</button>
+
+    </form>
+
+    <h2>Chamados em aberto</h2>
+    
+<br>
+
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Solicitante</th>
+                <th>Setor</th>
+                <th>Local</th>
+                <th>Data</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for chamado in chamados %}
+            <tr>
+                <td>
+                    <a href="{% url 'consultar_chamado' chamado.numero %}">
+                        #{{ chamado.numero }}
+                    </a>
+                </td>
+                <td>{{ chamado.solicitante }}</td>
+
+                <td>{{ chamado.setor.nome }}</td>
+
+                <td>{{ chamado.local_cadastrado.nome }}</td>
+
+                <td>{{ chamado.data_abertura|date:"d/m/Y H:i" }}</td>
+
+                <td>{{ chamado.get_status_display }}</td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="6">
+                    Nenhum chamado em aberto.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>

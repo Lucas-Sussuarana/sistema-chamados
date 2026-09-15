@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Chamado aberto</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .numero {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 25px 0;
+        }
+
+        .botao {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #0d6efd;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Chamado aberto com sucesso!</h1>
+
+        <hr>
+
+        <p>
+            <strong>Número:</strong>
+            #{{ chamado.numero }}
+        </p>
+
+        <p>
+            <strong>Setor:</strong>
+            {{ chamado.setor.nome }}
+        </p>
+
+        <p>
+            <strong>Local:</strong>
+            {{ chamado.local_cadastrado.nome }}
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            {{ chamado.get_status_display }}
+        </p>
+
+        <p>
+            <strong>Data de abertura:</strong>
+            {{ chamado.data_abertura|date:"d/m/Y H:i" }}
+        </p>
+
+        <hr>
+
+        <p>
+            Guarde o número do chamado para consultar o andamento.
+        </p>
+
+        <br>
+
+        <a href="{% url 'consultar_chamado' chamado.numero %}">
+            CONSULTAR ESTE CHAMADO
+        </a>
+
+        <br><br>
+
+        <a href="{% url 'inicio' %}">
+            Voltar para o início
+        </a>
+
+        <br><br>
+
+        <a href="{% url 'abrir_chamado' %}">
+            Abrir outro chamado
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chamado #{{ chamado.numero }}</title>
+</head>
+<body>
+
+    <h1>Chamado #{{ chamado.numero }}</h1>
+
+    <p><strong>Setor:</strong> {{ chamado.setor.nome }}</p>
+
+    <p><strong>Local:</strong> {{ chamado.local_cadastrado.nome }}</p>
+
+    <p><strong>Solicitante:</strong> {{ chamado.solicitante }}</p>
+
+    <p><strong>Status:</strong> {{ chamado.get_status_display }}</p>
+
+    <p>
+        <strong>Data de abertura:</strong>
+        {{ chamado.data_abertura|date:"d/m/Y H:i" }}
+    </p>
+
+    <p>
+        <strong>Última atualização:</strong>
+        {{ chamado.data_atualizacao|date:"d/m/Y H:i" }}
+    </p>
+
+    {% if chamado.data_finalizacao %}
+        <p>
+            <strong>Data de finalização:</strong>
+            {{ chamado.data_finalizacao|date:"d/m/Y H:i" }}
+        </p>
+    {% endif %}
+
+    <hr>
+
+    <h2>Descrição</h2>
+
+    <p>{{ chamado.descricao }}</p>
+
+    {% if chamado.status == "FINALIZADO" %}
+        <p><strong>Resolução:</strong> {{ chamado.resolucao }}</p>
+        <p><strong>Finalizado por:</strong> {{ chamado.operador_finalizacao }}</p>
+        <p><strong>Data de finalização:</strong> {{ chamado.data_finalizacao|date:"d/m/Y H:i" }}</p>
+    {% endif %}
+
+    <br>
+
+    <a href="{% url 'inicio' %}">Voltar</a>
+
+</body>
+</html>
