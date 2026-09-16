@@ -30,7 +30,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "retailers-stunning-mercy-gap.trycloudflare.com",
-    "SERVER-APP",
+    "CHAMADOS-TI",
 ]
 
 
