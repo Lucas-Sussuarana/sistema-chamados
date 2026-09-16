@@ -9,31 +9,31 @@ def inicio(request):
     status_filtro = request.GET.get("status", "abertos")
     solicitante_filtro = request.GET.get("solicitante", "").strip()
 
-    if status_filtro == "finalizados":
-        chamados_abertos = Chamado.objects.filter(
-            status="FINALIZADO"
-    )
+    # Se houver algum filtro de pesquisa, procura em todos os status.
+    if solicitante_filtro or setor_id or local_id:
+        chamados_abertos = Chamado.objects.all()
+
+    elif status_filtro == "finalizados":
+        chamados_abertos = Chamado.objects.filter(status="FINALIZADO")
+
     elif status_filtro == "todos":
         chamados_abertos = Chamado.objects.all()
+
     else:
         chamados_abertos = Chamado.objects.filter(
             status__in=["ABERTO", "ATENDIMENTO"]
-    )
+        )
 
-        
     if solicitante_filtro:
         chamados_abertos = chamados_abertos.filter(
             solicitante__icontains=solicitante_filtro
-    )
-    if setor_id:
-        chamados_abertos = chamados_abertos.filter(
-            setor_id=setor_id
         )
 
+    if setor_id:
+        chamados_abertos = chamados_abertos.filter(setor_id=setor_id)
+
     if local_id:
-        chamados_abertos = chamados_abertos.filter(
-            local_cadastrado_id=local_id
-        )
+        chamados_abertos = chamados_abertos.filter(local_cadastrado_id=local_id)
 
     chamados_abertos = chamados_abertos.order_by("data_abertura")
 
