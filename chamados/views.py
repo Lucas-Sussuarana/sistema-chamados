@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render
+from django.http import JsonResponse
 from .models import Chamado, Setor, Local, HistoricoChamado
 
 
@@ -147,3 +148,11 @@ def consultar_chamado(request, numero):
             "chamado": chamado
         }
     )
+
+
+def verificar_novo_chamado(request):
+    ultimo_chamado = Chamado.objects.order_by("-numero").first()
+
+    return JsonResponse({
+        "ultimo_numero": ultimo_chamado.numero if ultimo_chamado else 0
+    })

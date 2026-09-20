@@ -1,0 +1,416 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Amadeus System{% endblock %}</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172b4d;
+        }
+
+
+        /* =========================================
+           LAYOUT
+        ========================================== */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           SIDEBAR
+        ========================================== */
+
+        .sidebar {
+            width: 210px;
+            background: linear-gradient(
+                180deg,
+                #102b4d 0%,
+                #0b213d 100%
+            );
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            padding: 25px 12px;
+            z-index: 100;
+        }
+
+
+        /* =========================================
+           LOGO
+        ========================================== */
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 12px 30px;
+        }
+
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #1478e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            flex-shrink: 0;
+        }
+
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+
+
+        /* =========================================
+           MENU
+        ========================================== */
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+
+        .menu a,
+        .menu-bottom a {
+            text-decoration: none;
+            color: #d8e5f5;
+            padding: 13px 14px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover,
+        .menu-bottom a:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+
+        .menu a.ativo {
+            background: linear-gradient(
+                90deg,
+                #1478e8,
+                #1768c5
+            );
+            color: white;
+            box-shadow:
+                0 4px 12px rgba(20,120,232,0.25);
+        }
+
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================
+           MENU INFERIOR
+        ========================================== */
+
+        .menu-bottom {
+            position: absolute;
+            bottom: 25px;
+            left: 12px;
+            right: 12px;
+        }
+
+
+        /* =========================================
+           ÁREA PRINCIPAL
+        ========================================== */
+
+        .main {
+            margin-left: 210px;
+            width: calc(100% - 210px);
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           TOPBAR
+        ========================================== */
+
+        .topbar {
+            height: 58px;
+            background: white;
+            border-bottom: 1px solid #e5eaf0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 35px;
+        }
+
+
+        .usuario {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #243b5a;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+
+        .usuario-icon {
+            font-size: 19px;
+        }
+
+
+        /* =========================================
+           CONTEÚDO
+        ========================================== */
+
+        .conteudo {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 55px 35px;
+        }
+
+
+        /* =========================================
+           RESPONSIVIDADE
+        ========================================== */
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+
+            .logo {
+                justify-content: center;
+                padding: 5px 0 30px;
+            }
+
+
+            .logo-text {
+                display: none;
+            }
+
+
+            .menu a,
+            .menu-bottom a {
+                justify-content: center;
+                padding: 13px 8px;
+            }
+
+
+            .menu a span:not(.menu-icon),
+            .menu-bottom a span:not(.menu-icon) {
+                display: none;
+            }
+
+
+            .menu-icon {
+                font-size: 20px;
+            }
+
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+
+
+            .conteudo {
+                padding: 35px 20px;
+            }
+
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .conteudo {
+                padding: 30px 20px;
+            }
+            .conteudo-largo {
+                max-width: 1150px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .sidebar {
+                display: none;
+            }
+
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+
+            .conteudo {
+                padding: 20px 12px;
+            }
+
+        }
+
+    </style>
+
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <!-- =========================================
+         MENU LATERAL
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🎧
+            </div>
+
+            <div class="logo-text">
+                Amadeus<br>
+                System
+            </div>
+
+        </div>
+
+
+        <nav class="menu">
+
+            <a href="{% url 'inicio' %}"
+               class="{% block menu_inicio %}{% endblock %}">
+
+                <span class="menu-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Início
+                </span>
+
+            </a>
+
+
+            <a href="{% url 'abrir_chamado' %}"
+               class="{% block menu_novo_chamado %}{% endblock %}">
+
+                <span class="menu-icon">
+                    ＋
+                </span>
+
+                <span>
+                    Novo Chamado
+                </span>
+
+            </a>
+
+        </nav>
+
+
+    </aside>
+
+
+
+    <!-- =========================================
+         ÁREA PRINCIPAL
+    ========================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="usuario">
+
+                <span class="usuario-icon">
+                    👤
+                </span>
+
+                <span>
+                    Usuário
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             CONTEÚDO DA PÁGINA
+        ========================================== -->
+
+        <div class="{% block content_class %}conteudo{% endblock %}">
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+{% block extra_js %}
+{% endblock %}
+
+</body>
+
+</html>
+```

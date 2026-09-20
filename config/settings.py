@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "192.168.2.58",
+    "192.168.100.42",
     "localhost",
     "127.0.0.1",
     "retailers-stunning-mercy-gap.trycloudflare.com",

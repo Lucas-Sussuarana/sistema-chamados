@@ -1,961 +1,651 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+{% extends "chamados/base.html" %}
 
-<head>
+{% block title %}Chamado #{{ chamado.numero }} - Amadeus System{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block content_class %}conteudo conteudo-largo{% endblock %}
 
-    <title>Chamado #{{ chamado.numero }} - Amadeus System</title>
+{% block extra_css %}
 
-    <style>
+<style>
 
-        * {
-            box-sizing: border-box;
+    /* =========================================
+       TÍTULO
+    ========================================== */
+
+    .titulo-area {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 25px;
+        gap: 20px;
+    }
+
+    .titulo-area h1 {
+        margin: 0 0 5px;
+        font-size: 30px;
+        color: #123b70;
+    }
+
+    .titulo-area p {
+        margin: 0;
+        color: #64748b;
+        font-size: 15px;
+    }
+
+
+    /* =========================================
+       CARD
+    ========================================== */
+
+    .card {
+        background: white;
+        border: 1px solid #dce5ef;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(24, 55, 90, 0.05);
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #e6ebf1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        font-size: 19px;
+        color: #123b70;
+    }
+
+    .card-header-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: #e9f2ff;
+        color: #1478e8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+
+    /* =========================================
+       INFORMAÇÕES DO CHAMADO
+    ========================================== */
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 35px;
+    }
+
+    .info-item {
+        min-width: 0;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 12px;
+        color: #7a8da3;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        letter-spacing: 0.3px;
+    }
+
+    .info-value {
+        color: #263b56;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+
+    /* =========================================
+       STATUS
+    ========================================== */
+
+    .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .status::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+    }
+
+    .status-aberto {
+        background: #dff7eb;
+        color: #07834e;
+    }
+
+    .status-aberto::before {
+        background: #0aa568;
+    }
+
+    .status-atendimento {
+        background: #fff1c9;
+        color: #a56a00;
+    }
+
+    .status-atendimento::before {
+        background: #f0a500;
+    }
+
+    .status-finalizado {
+        background: #e5efff;
+        color: #2364c4;
+    }
+
+    .status-finalizado::before {
+        background: #3478d4;
+    }
+
+
+    /* =========================================
+       DESCRIÇÃO
+    ========================================== */
+
+    .descricao {
+        background: #f7f9fc;
+        border: 1px solid #e5ebf2;
+        border-radius: 8px;
+        padding: 18px;
+        color: #40556e;
+        line-height: 1.6;
+        font-size: 15px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+
+    /* =========================================
+    TABELA DO HISTÓRICO
+    ========================================= */
+
+    .historico-tabela {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .historico-tabela th {
+        text-align: left;
+        background: #f2f6fb;
+        color: #5f748c;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        padding: 11px 14px;
+        border-bottom: 1px solid #dce5ef;
+    }
+
+    .historico-tabela td {
+        padding: 12px 14px;
+        color: #40556e;
+        border-bottom: 1px solid #e8eef5;
+        vertical-align: top;
+    }
+
+    .historico-tabela tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .historico-tabela tbody tr:hover {
+        background: #f8fbff;
+    }
+
+    .historico-data {
+        width: 170px;
+        white-space: nowrap;
+        font-weight: 500;
+    }
+
+    .historico-operador {
+        width: 130px;
+        white-space: nowrap;
+        font-weight: 500;
+        color: #263b56 !important;
+    }
+
+    .historico-texto {
+        white-space: wrap;
+        word-break: break-word;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    .finalizacao-info {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+
+    /* =========================================
+       BOTÃO VOLTAR
+    ========================================== */
+
+    .acoes {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 5px;
+    }
+
+    .btn-voltar {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 20px;
+        background: white;
+        color: #36516f;
+        border: 1px solid #ccd7e3;
+        border-radius: 7px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    .btn-voltar:hover {
+        background: #f5f8fc;
+        border-color: #b7c6d7;
+        transform: translateY(-1px);
+    }
+
+
+    /* =========================================
+       RESPONSIVO
+    ========================================== */
+
+    @media (max-width: 800px) {
+
+        .info-grid {
+            grid-template-columns: 1fr;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
-            color: #172b4d;
+        .finalizacao-info {
+            grid-template-columns: 1fr;
         }
 
-
-        /* =========================================
-           LAYOUT
-        ========================================= */
-
-        .layout {
-            display: flex;
-            min-height: 100vh;
+        .titulo-area h1 {
+            font-size: 25px;
         }
 
+    }
 
-        /* =========================================
-           MENU LATERAL
-        ========================================= */
 
-        .sidebar {
-            width: 210px;
-            background: linear-gradient(180deg, #102b4d 0%, #0b213d 100%);
-            color: white;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            padding: 25px 12px;
-            z-index: 100;
+    @media (max-width: 500px) {
+
+        .card-body {
+            padding: 18px;
         }
 
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 5px 12px 30px;
+        .titulo-area {
+            display: block;
         }
 
-
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: #1478e8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .titulo-area h1 {
             font-size: 23px;
         }
 
+    }
 
-        .logo-text {
-            font-size: 20px;
-            font-weight: bold;
-            line-height: 1.1;
-        }
+</style>
 
+{% endblock %}
 
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
 
+{% block content %}
 
-        .menu a {
-            text-decoration: none;
-            color: #d8e5f5;
-            padding: 13px 14px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            font-size: 15px;
-            transition: 0.2s;
-        }
+<div class="titulo-area">
 
+    <div>
 
-        .menu a:hover {
-            background: rgba(255,255,255,0.08);
-            color: white;
-        }
+        <h1>
+            Chamado #{{ chamado.numero }}
+        </h1>
 
+        <p>
+            Detalhes e informações do chamado.
+        </p>
 
-        .menu a.ativo {
-            background: linear-gradient(90deg, #1478e8, #1768c5);
-            color: white;
-            box-shadow: 0 4px 12px rgba(20,120,232,0.25);
-        }
-
-
-        .menu-icon {
-            width: 22px;
-            text-align: center;
-            font-size: 17px;
-        }
-
-
-        .menu-bottom {
-            position: absolute;
-            bottom: 25px;
-            left: 12px;
-            right: 12px;
-        }
-
-
-        /* =========================================
-           ÁREA PRINCIPAL
-        ========================================= */
-
-        .main {
-            margin-left: 210px;
-            width: calc(100% - 210px);
-            min-height: 100vh;
-        }
-
-
-        /* =========================================
-           TOPO
-        ========================================= */
-
-        .topbar {
-            height: 58px;
-            background: white;
-            border-bottom: 1px solid #e5eaf0;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 0 35px;
-        }
-
-
-        .usuario {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            color: #243b5a;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-
-        .usuario-icon {
-            font-size: 19px;
-        }
-
-
-        /* =========================================
-           CONTEÚDO
-        ========================================= */
-
-        .conteudo {
-            max-width: 1150px;
-            margin: 0 auto;
-            padding: 35px;
-        }
-
-
-        .titulo-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 25px;
-            gap: 20px;
-        }
-
-
-        .titulo-area h1 {
-            margin: 0 0 5px;
-            font-size: 30px;
-            color: #123b70;
-        }
-
-
-        .titulo-area p {
-            margin: 0;
-            color: #64748b;
-            font-size: 15px;
-        }
-
-
-        /* =========================================
-           CARD
-        ========================================= */
-
-        .card {
-            background: white;
-            border: 1px solid #dce5ef;
-            border-radius: 10px;
-            box-shadow: 0 3px 12px rgba(24, 55, 90, 0.05);
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-
-
-        .card-header {
-            padding: 18px 22px;
-            border-bottom: 1px solid #e6ebf1;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-
-        .card-header h2 {
-            margin: 0;
-            font-size: 19px;
-            color: #123b70;
-        }
-
-
-        .card-header-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: #e9f2ff;
-            color: #1478e8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-        }
-
-
-        .card-body {
-            padding: 25px;
-        }
-
-
-        /* =========================================
-           INFORMAÇÕES DO CHAMADO
-        ========================================= */
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px 35px;
-        }
-
-
-        .info-item {
-            min-width: 0;
-        }
-
-
-        .info-label {
-            display: block;
-            font-size: 12px;
-            color: #7a8da3;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
-        }
-
-
-        .info-value {
-            color: #263b56;
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-
-        /* =========================================
-           STATUS
-        ========================================= */
-
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-
-        .status::before {
-            content: "";
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-        }
-
-
-        .status-aberto {
-            background: #dff7eb;
-            color: #07834e;
-        }
-
-
-        .status-aberto::before {
-            background: #0aa568;
-        }
-
-
-        .status-atendimento {
-            background: #fff1c9;
-            color: #a56a00;
-        }
-
-
-        .status-atendimento::before {
-            background: #f0a500;
-        }
-
-
-        .status-finalizado {
-            background: #e5efff;
-            color: #2364c4;
-        }
-
-
-        .status-finalizado::before {
-            background: #3478d4;
-        }
-
-
-        /* =========================================
-           DESCRIÇÃO
-        ========================================= */
-
-        .descricao {
-            background: #f7f9fc;
-            border: 1px solid #e5ebf2;
-            border-radius: 8px;
-            padding: 18px;
-            color: #40556e;
-            line-height: 1.6;
-            font-size: 15px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-
-        /* =========================================
-           RESOLUÇÃO
-        ========================================= */
-
-        .resolucao {
-            background: #f2f8ff;
-            border: 1px solid #d7e8fb;
-            border-left: 4px solid #1478e8;
-            border-radius: 7px;
-            padding: 18px;
-            color: #40556e;
-            line-height: 1.6;
-            font-size: 15px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-
-        .finalizacao-info {
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-
-        /* =========================================
-           BOTÃO VOLTAR
-        ========================================= */
-
-        .acoes {
-            display: flex;
-            justify-content: flex-start;
-            margin-top: 5px;
-        }
-
-
-        .btn-voltar {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 11px 20px;
-            background: white;
-            color: #36516f;
-            border: 1px solid #ccd7e3;
-            border-radius: 7px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-
-        .btn-voltar:hover {
-            background: #f5f8fc;
-            border-color: #b7c6d7;
-            transform: translateY(-1px);
-        }
-
-
-        /* =========================================
-           RESPONSIVO
-        ========================================= */
-
-        @media (max-width: 800px) {
-
-            .sidebar {
-                width: 70px;
-                padding: 20px 8px;
-            }
-
-
-            .logo {
-                justify-content: center;
-                padding: 5px 0 30px;
-            }
-
-
-            .logo-text {
-                display: none;
-            }
-
-
-            .menu a {
-                justify-content: center;
-                padding: 13px 8px;
-            }
-
-
-            .menu a span:not(.menu-icon) {
-                display: none;
-            }
-
-
-            .menu-icon {
-                font-size: 20px;
-            }
-
-
-            .main {
-                margin-left: 70px;
-                width: calc(100% - 70px);
-            }
-
-
-            .conteudo {
-                padding: 25px 18px;
-            }
-
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-
-            .finalizacao-info {
-                grid-template-columns: 1fr;
-            }
-
-
-            .titulo-area h1 {
-                font-size: 25px;
-            }
-
-
-            .topbar {
-                padding: 0 18px;
-            }
-
-        }
-
-
-        @media (max-width: 500px) {
-
-            .sidebar {
-                display: none;
-            }
-
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-            }
-
-
-            .conteudo {
-                padding: 20px 12px;
-            }
-
-
-            .card-body {
-                padding: 18px;
-            }
-
-
-            .titulo-area {
-                display: block;
-            }
-
-
-            .titulo-area h1 {
-                font-size: 23px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-<div class="layout">
-
-
-    <!-- =========================================
-         MENU LATERAL
-    ========================================== -->
-
-    <aside class="sidebar">
-
-
-        <div class="logo">
-
-            <div class="logo-icon">
-                🎧
-            </div>
-
-            <div class="logo-text">
-                Amadeus<br>
-                System
-            </div>
-
-        </div>
-
-
-        <nav class="menu">
-
-
-            <a href="{% url 'inicio' %}">
-
-                <span class="menu-icon">
-                    ⌂
-                </span>
-
-                <span>
-                    Início
-                </span>
-
-            </a>
-
-
-            <a href="/abrir/">
-
-                <span class="menu-icon">
-                    ＋
-                </span>
-
-                <span>
-                    Novo Chamado
-                </span>
-
-            </a>
-
-
-        </nav>
-
-
-
-    </aside>
-
-
-
-    <!-- =========================================
-         ÁREA PRINCIPAL
-    ========================================== -->
-
-    <main class="main">
-
-
-        <!-- TOPO -->
-
-        <header class="topbar">
-
-            <div class="usuario">
-
-
-
-                <span>
-                    Usuário
-                </span>
-
-
-            </div>
-
-        </header>
-
-
-
-        <!-- CONTEÚDO -->
-
-        <div class="conteudo">
-
-
-            <!-- TÍTULO -->
-
-            <div class="titulo-area">
-
-
-                <div>
-
-                    <h1>
-                        Chamado #{{ chamado.numero }}
-                    </h1>
-
-                    <p>
-                        Detalhes e informações do chamado.
-                    </p>
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- =================================
-                 INFORMAÇÕES DO CHAMADO
-            ================================== -->
-
-            <div class="card">
-
-
-                <div class="card-header">
-
-                    <div class="card-header-icon">
-                        ▤
-                    </div>
-
-                    <h2>
-                        Informações do chamado
-                    </h2>
-
-                </div>
-
-
-                <div class="card-body">
-
-
-                    <div class="info-grid">
-
-
-                        <!-- SETOR -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Setor
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.setor.nome }}
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- LOCAL -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Local
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.local_cadastrado.nome }}
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- SOLICITANTE -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Solicitante
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.solicitante }}
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- STATUS -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Status
-                            </span>
-
-
-                            <span class="info-value">
-
-                                {% if chamado.status == "ABERTO" %}
-
-                                    <span class="status status-aberto">
-                                        Aberto
-                                    </span>
-
-                                {% elif chamado.status == "ATENDIMENTO" %}
-
-                                    <span class="status status-atendimento">
-                                        Em atendimento
-                                    </span>
-
-                                {% elif chamado.status == "FINALIZADO" %}
-
-                                    <span class="status status-finalizado">
-                                        Finalizado
-                                    </span>
-
-                                {% else %}
-
-                                    <span class="status status-finalizado">
-                                        {{ chamado.get_status_display }}
-                                    </span>
-
-                                {% endif %}
-
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- DATA DE ABERTURA -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Data de abertura
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.data_abertura|date:"d/m/Y H:i" }}
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- ÚLTIMA ATUALIZAÇÃO -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Última atualização
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.data_atualizacao|date:"d/m/Y H:i" }}
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- DATA DE FINALIZAÇÃO -->
-
-                        {% if chamado.data_finalizacao %}
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Data de finalização
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.data_finalizacao|date:"d/m/Y H:i" }}
-                            </span>
-
-                        </div>
-
-                        {% endif %}
-
-
-                    </div>
-
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================
-                 DESCRIÇÃO
-            ================================== -->
-
-            <div class="card">
-
-
-                <div class="card-header">
-
-                    <div class="card-header-icon">
-                        ☰
-                    </div>
-
-                    <h2>
-                        Descrição
-                    </h2>
-
-                </div>
-
-
-                <div class="card-body">
-
-                    <div class="descricao">
-
-                        {{ chamado.descricao }}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- =================================
-                 RESOLUÇÃO
-            ================================== -->
-
-            
-
-            <div class="card">
-
-
-                <div class="card-header">
-
-                    <div class="card-header-icon">
-                        ✓
-                    </div>
-
-                    <h2>
-                        Resolução
-                    </h2>
-
-                </div>
-
-
-                <div class="card-body">
-
-
-                    <div class="resolucao">
-
-                        {{ chamado.resolucao }}
-
-                    </div>
-
-
-
-                    <div class="finalizacao-info">
-
-
-                        <!-- FINALIZADO POR -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Finalizado por
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.operador_finalizacao }}
-                            </span>
-
-                        </div>
-
-
-
-                        <!-- DATA -->
-
-                        <div class="info-item">
-
-                            <span class="info-label">
-                                Data de finalização
-                            </span>
-
-                            <span class="info-value">
-                                {{ chamado.data_finalizacao|date:"d/m/Y H:i" }}
-                            </span>
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-            </div>
-
-            
-
-
-
-            <!-- =================================
-                 VOLTAR
-            ================================== -->
-
-            <div class="acoes">
-
-                <a
-                    href="{% url 'inicio' %}"
-                    class="btn-voltar"
-                >
-
-                    ← Voltar
-
-                </a>
-
-            </div>
-
-
-        </div>
-
-    </main>
+    </div>
 
 </div>
 
 
-</body>
+<!-- =================================
+     INFORMAÇÕES DO CHAMADO
+================================== -->
 
-</html>
+<div class="card">
+
+    <div class="card-header">
+
+        <div class="card-header-icon">
+            ▤
+        </div>
+
+        <h2>
+            Informações do chamado
+        </h2>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="info-grid">
+
+
+            <!-- SETOR -->
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Setor
+                </span>
+
+                <span class="info-value">
+                    {{ chamado.setor.nome }}
+                </span>
+
+            </div>
+
+
+            <!-- LOCAL -->
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Local
+                </span>
+
+                <span class="info-value">
+                    {{ chamado.local_cadastrado.nome }}
+                </span>
+
+            </div>
+
+
+            <!-- SOLICITANTE -->
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Solicitante
+                </span>
+
+                <span class="info-value">
+                    {{ chamado.solicitante }}
+                </span>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Status
+                </span>
+
+                <span class="info-value">
+
+                    {% if chamado.status == "ABERTO" %}
+
+                        <span class="status status-aberto">
+                            Aberto
+                        </span>
+
+                    {% elif chamado.status == "ATENDIMENTO" %}
+
+                        <span class="status status-atendimento">
+                            Em atendimento
+                        </span>
+
+                    {% elif chamado.status == "FINALIZADO" %}
+
+                        <span class="status status-finalizado">
+                            Finalizado
+                        </span>
+
+                    {% else %}
+
+                        <span class="status status-finalizado">
+                            {{ chamado.get_status_display }}
+                        </span>
+
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+            <!-- DATA DE ABERTURA -->
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Data de abertura
+                </span>
+
+                <span class="info-value">
+                    {{ chamado.data_abertura|date:"d/m/Y H:i" }}
+                </span>
+
+            </div>
+
+
+            <!-- ÚLTIMA ATUALIZAÇÃO -->
+
+            <div class="info-item">
+
+                <span class="info-label">
+                    Última atualização
+                </span>
+
+                <span class="info-value">
+                    {{ chamado.data_atualizacao|date:"d/m/Y H:i" }}
+                </span>
+
+            </div>
+
+
+            <!-- DATA DE FINALIZAÇÃO -->
+
+            {% if chamado.data_finalizacao %}
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Data de finalização
+                    </span>
+
+                    <span class="info-value">
+                        {{ chamado.data_finalizacao|date:"d/m/Y H:i" }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =================================
+     DESCRIÇÃO
+================================== -->
+
+<div class="card">
+
+    <div class="card-header">
+
+        <div class="card-header-icon">
+            ☰
+        </div>
+
+        <h2>
+            Descrição
+        </h2>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="descricao">
+            {{ chamado.descricao }}
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =================================
+     HISTÓRICO DO ATENDIMENTO
+================================== -->
+
+{% if chamado.registros_atendimento.all %}
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <div class="card-header-icon">
+                ✓
+            </div>
+
+            <h2>
+                Histórico do atendimento
+            </h2>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <table class="historico-tabela">
+
+                <thead>
+                    <tr>
+                        <th>Data / Hora</th>
+                        <th>Operador</th>
+                        <th>Ocorrência</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for registro in chamado.registros_atendimento.all %}
+
+                        <tr>
+
+                            <td class="historico-data">
+                                {{ registro.data|date:"d/m/Y H:i" }}
+                            </td>
+
+                            <td class="historico-operador">
+                                {% if registro.operador %}
+                                    {{ registro.operador }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td class="historico-texto">
+                                {{ registro.texto }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+            <div class="finalizacao-info">
+
+
+                <!-- FINALIZADO POR -->
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Finalizado por
+                    </span>
+
+                    <span class="info-value">
+                        {{ chamado.operador_finalizacao }}
+                    </span>
+
+                </div>
+
+
+                <!-- DATA -->
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Data de finalização
+                    </span>
+
+                    <span class="info-value">
+                        {{ chamado.data_finalizacao|date:"d/m/Y H:i" }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+
+<!-- =================================
+     VOLTAR
+================================== -->
+
+<div class="acoes">
+
+    <a
+        href="{% url 'inicio' %}"
+        class="btn-voltar"
+    >
+        ← Voltar
+    </a>
+
+</div>
+
+{% endblock %}

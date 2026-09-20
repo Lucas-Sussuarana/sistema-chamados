@@ -16,8 +16,28 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from chamados import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("", include("chamados.urls")),
+    path("admin/", admin.site.urls),
+
+    path("", views.inicio, name="inicio"),
+
+    path(
+        "abrir/",
+        views.abrir_chamado,
+        name="abrir_chamado",
+    ),
+
+    path(
+        "consultar/<int:numero>/",
+        views.consultar_chamado,
+        name="consultar_chamado",
+    ),
+
+    path(
+        "verificar-novo-chamado/",
+        views.verificar_novo_chamado,
+        name="verificar_novo_chamado",
+    ),
 ]

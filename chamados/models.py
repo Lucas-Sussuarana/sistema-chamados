@@ -172,3 +172,35 @@ class HistoricoChamado(models.Model):
 
     def __str__(self):
         return f"Chamado #{self.chamado.numero} - {self.get_status_display()}"
+
+class RegistroAtendimento(models.Model):
+    chamado = models.ForeignKey(
+        Chamado,
+        on_delete=models.CASCADE,
+        related_name="registros_atendimento",
+        verbose_name="Chamado"
+    )
+
+    operador = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="registros_atendimento",
+        verbose_name="Operador"
+    )
+
+    texto = models.TextField(verbose_name="Ocorrência")
+
+    data = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Data"
+    )
+
+    class Meta:
+        verbose_name = "Registro de atendimento"
+        verbose_name_plural = "Registros de atendimento"
+        ordering = ["data"]
+
+    def __str__(self):
+        return f"Chamado #{self.chamado.numero} - {self.data:%d/%m/%Y %H:%M}"

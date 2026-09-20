@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Chamado, Setor, Local, HistoricoChamado
+from .models import Chamado, Setor, Local, HistoricoChamado, RegistroAtendimento
 
 
 @admin.register(Setor)
@@ -64,18 +64,15 @@ class ChamadoAdminForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-
-        status = cleaned_data.get("status")
-        resolucao = cleaned_data.get("resolucao")
-
-        if status == "FINALIZADO" and not resolucao:
-            self.add_error(
-                "resolucao",
-                "Informe a resolução antes de finalizar o chamado."
-            )
-
         return cleaned_data
 
+
+class RegistroAtendimentoInline(admin.TabularInline):
+    model = RegistroAtendimento
+    extra = 1
+    can_delete = False
+    fields = ("operador", "texto", "data")
+    readonly_fields = ("operador", "data")
 
 @admin.register(Chamado)
 class ChamadoAdmin(admin.ModelAdmin):
@@ -95,14 +92,6 @@ class ChamadoAdmin(admin.ModelAdmin):
                     "local_cadastrado",
                     "descricao",
                     "status",
-                )
-            },
-        ),
-        (
-            "Atendimento",
-            {
-                "fields": (
-                    "resolucao",
                 )
             },
         ),
@@ -171,9 +160,22 @@ class ChamadoAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+
+        for instance in instances:
+            if isinstance(instance, RegistroAtendimento):
+                if instance.pk is None:
+                    instance.operador = request.user
+
+            instance.save()
+
+        formset.save_m2m()
+
     inlines = (
-        HistoricoChamadoInline,
-    )
+            HistoricoChamadoInline,
+            RegistroAtendimentoInline,
+        )
 
 
 @admin.register(HistoricoChamado)
@@ -213,3 +215,12 @@ def changelist_view(self, request, extra_context=None):
         request,
         extra_context=extra_context
     )
+
+@admin.register(RegistroAtendimento)
+class RegistroAtendimentoAdmin(admin.ModelAdmin):
+    list_display = ("chamado", "operador", "texto", "data")
+    list_filter = ("operador", "data")
+    search_fields = ("chamado__numero", "texto")
+    ordering = ("-data",)
+    readonly_fields = ("operador", "data")
+
