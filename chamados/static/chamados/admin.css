@@ -1,0 +1,739 @@
+/* =========================================
+AMADEUS SYSTEM - DJANGO ADMIN
+========================================= */
+
+/* =========================================
+FUNDO GERAL
+========================================= */
+
+body {
+background: #f4f7fb;
+color: #263b56;
+}
+
+/* =========================================
+CABEÇALHO
+========================================= */
+
+#header {
+background: #123b70;
+color: white;
+border-bottom: 3px solid #1478e8;
+}
+
+/* =========================================
+NOME DO SISTEMA
+========================================= */
+
+#site-name a {
+color: white;
+font-size: 20px;
+font-weight: 600;
+text-decoration: none;
+}
+
+#site-name a:hover {
+color: white;
+}
+
+/* =========================================
+USUÁRIO / LINKS DO CABEÇALHO
+========================================= */
+
+#user-tools {
+color: #dce9f7;
+}
+
+#user-tools a {
+color: white;
+}
+
+#user-tools a:hover {
+color: #d7e8fb;
+}
+
+/* =========================================
+TÍTULOS
+========================================= */
+
+#content h1 {
+color: #123b70;
+font-weight: 600;
+}
+
+/* =========================================
+BREADCRUMBS
+========================================= */
+
+div.breadcrumbs {
+background: white;
+color: #64748b;
+border-bottom: 1px solid #dce5ef;
+padding: 12px 20px;
+}
+
+div.breadcrumbs a {
+color: #1478e8;
+}
+
+div.breadcrumbs a:hover {
+color: #0d5fc2;
+}
+
+/* =========================================
+CONTEÚDO
+========================================= */
+
+#content {
+padding: 25px;
+}
+
+/* =========================================
+MÓDULOS / BLOCOS
+========================================= */
+
+.module {
+border: 1px solid #dce5ef;
+border-radius: 10px;
+overflow: hidden;
+background: white;
+box-shadow: 0 3px 12px rgba(24, 55, 90, 0.05);
+}
+
+.module h2,
+.module caption {
+background: #edf4fc;
+color: #123b70;
+}
+
+/* =========================================
+LINKS
+========================================= */
+
+a:link,
+a:visited {
+color: #1478e8;
+}
+
+a:hover {
+color: #0d5fc2;
+}
+
+/* =========================================
+BOTÕES GERAIS
+========================================= */
+
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+a.button {
+border-radius: 7px;
+font-weight: 600;
+}
+
+/* =========================================
+TABELAS DE CHANGELIST
+========================================= */
+
+#changelist table {
+border-radius: 8px;
+overflow: hidden;
+}
+
+#changelist table thead th {
+background: #f2f6fb;
+}
+
+#changelist table thead th a {
+color: #40556e;
+}
+
+/* =========================================
+CAMPOS DE FORMULÁRIO GERAIS
+========================================= */
+
+input,
+textarea,
+select {
+border-radius: 6px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+border-color: #1478e8;
+}
+
+/* =========================================
+RODAPÉ
+========================================= */
+
+#footer {
+background: transparent;
+color: #7a8da3;
+}
+
+/* =========================================
+RESPONSIVO
+========================================= */
+
+@media (max-width: 800px) {
+#content {
+padding: 18px;
+}
+
+#site-name a {
+    font-size: 18px;
+}
+
+
+}
+
+/* =========================================
+LISTAGEM DE CHAMADOS (CHANGELIST)
+========================================= */
+
+#changelist {
+background: transparent;
+}
+
+#toolbar {
+background: white;
+border: 1px solid #dce5ef;
+border-radius: 10px;
+padding: 14px 16px;
+margin-bottom: 18px;
+box-shadow: 0 3px 12px rgba(24, 55, 90, 0.04);
+}
+
+#toolbar form {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+#toolbar input[type="text"] {
+min-height: 36px;
+border: 1px solid #ccd7e3;
+border-radius: 7px;
+padding: 7px 11px;
+}
+
+#toolbar input[type="submit"] {
+min-height: 36px;
+background: #1478e8;
+border: 1px solid #1478e8;
+border-radius: 7px;
+color: white;
+padding: 7px 16px;
+font-weight: 600;
+transition: background .15s ease, border-color .15s ease;
+}
+
+#toolbar input[type="submit"]:hover {
+background: #0d5fc2;
+border-color: #0d5fc2;
+}
+
+#changelist .results {
+background: white;
+border: 1px solid #dce5ef;
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 3px 12px rgba(24, 55, 90, 0.05);
+}
+
+#changelist .results table {
+width: 100%;
+border-collapse: collapse;
+}
+
+#changelist .results thead th {
+background: #f2f6fb;
+color: #526b86;
+border-bottom: 1px solid #dce5ef;
+padding: 13px 12px;
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 0.3px;
+white-space: nowrap;
+}
+
+#changelist .results thead th a {
+color: #526b86;
+}
+
+#changelist .results thead th a:hover {
+color: #1478e8;
+}
+
+#changelist .results tbody tr {
+transition: background 0.15s ease;
+}
+
+#changelist .results tbody tr:hover {
+background: #f7faff;
+}
+
+#changelist .results tbody td {
+padding: 12px;
+border-bottom: 1px solid #edf1f5;
+color: #40556e;
+vertical-align: middle;
+}
+
+#changelist .results tbody tr:last-child td {
+border-bottom: none;
+}
+
+#changelist .field-numero a {
+color: #1478e8;
+font-weight: 700;
+font-size: 14px;
+}
+
+#changelist .field-numero a:hover {
+color: #0d5fc2;
+}
+
+#changelist .field-solicitante {
+font-weight: 500;
+color: #263b56;
+}
+
+#changelist .field-status {
+font-weight: 600;
+white-space: nowrap;
+}
+
+#changelist .field-data_abertura {
+white-space: nowrap;
+color: #64748b;
+font-size: 13px;
+}
+
+.paginator {
+margin-top: 18px;
+padding: 12px 16px;
+background: white;
+border: 1px solid #dce5ef;
+border-radius: 10px;
+color: #64748b;
+}
+
+.paginator a {
+color: #1478e8;
+}
+
+.paginator a:hover {
+color: #0d5fc2;
+}
+
+#changelist-filter {
+background: white;
+border-left: 1px solid #dce5ef;
+border-top: 1px solid #dce5ef;
+border-right: 1px solid #dce5ef;
+border-radius: 10px;
+overflow: hidden;
+}
+
+#changelist-filter h2 {
+background: #edf4fc;
+color: #123b70;
+padding: 12px 15px;
+}
+
+#changelist-filter h3 {
+color: #526b86;
+}
+
+#changelist-filter li {
+margin-bottom: 5px;
+}
+
+#changelist-filter a {
+color: #1478e8;
+}
+
+#changelist-filter a:hover {
+color: #0d5fc2;
+}
+
+.actions {
+background: white;
+border: 1px solid #dce5ef;
+border-radius: 10px;
+padding: 10px 12px;
+margin-bottom: 12px;
+}
+
+/* =========================================
+STATUS BADGES
+========================================= */
+
+.admin-status {
+display: inline-flex;
+align-items: center;
+gap: 7px;
+padding: 5px 10px;
+border-radius: 20px;
+font-size: 12px;
+font-weight: 600;
+white-space: nowrap;
+}
+
+.admin-status::before {
+content: "";
+width: 7px;
+height: 7px;
+border-radius: 50%;
+}
+
+.admin-status.status-aberto {
+background: #dff7eb;
+color: #07834e;
+}
+
+.admin-status.status-aberto::before {
+background: #0aa568;
+}
+
+.admin-status.status-atendimento {
+background: #fff1c9;
+color: #a56a00;
+}
+
+.admin-status.status-atendimento::before {
+background: #f0a500;
+}
+
+.admin-status.status-finalizado {
+background: #e5efff;
+color: #2364c4;
+}
+
+.admin-status.status-finalizado::before {
+background: #3478d4;
+}
+
+/* =========================================
+TELA DE EDIÇÃO DO CHAMADO (FORMULARIO)
+========================================= */
+
+fieldset.module {
+border: 1px solid #dce5ef;
+border-radius: 10px;
+background: white;
+overflow: hidden;
+box-shadow: 0 3px 12px rgba(24, 55, 90, 0.04);
+margin-bottom: 20px;
+}
+
+fieldset.module h2 {
+background: #edf4fc;
+color: #123b70;
+border-bottom: 1px solid #dce5ef;
+padding: 13px 16px;
+font-size: 15px;
+font-weight: 600;
+}
+
+fieldset.module .form-row {
+padding: 14px 18px;
+border-bottom: 1px solid #edf1f5;
+}
+
+fieldset.module .form-row:last-child {
+border-bottom: none;
+}
+
+fieldset.module label {
+color: #526b86;
+font-weight: 600;
+font-size: 13px;
+}
+
+fieldset.module input[type="text"],
+fieldset.module input[type="number"],
+fieldset.module input[type="datetime"],
+fieldset.module input[type="datetime-local"],
+fieldset.module select,
+fieldset.module textarea {
+border: 1px solid #ccd7e3;
+border-radius: 7px;
+padding: 8px 10px;
+color: #263b56;
+background: white;
+}
+
+fieldset.module input:focus,
+fieldset.module select:focus,
+fieldset.module textarea:focus {
+border-color: #1478e8;
+box-shadow: 0 0 0 2px rgba(20, 120, 232, 0.10);
+outline: none;
+}
+
+fieldset.module .readonly {
+color: #40556e;
+padding-top: 7px;
+}
+
+fieldset.module .help {
+color: #7a8da3;
+font-size: 12px;
+}
+
+fieldset.module .errors {
+border-radius: 6px;
+margin-bottom: 6px;
+}
+
+fieldset.module .field-descricao textarea {
+min-height: 130px;
+line-height: 1.5;
+resize: vertical;
+}
+
+fieldset.module .field-descricao label {
+display: block;
+margin-bottom: 6px;
+}
+
+fieldset.module .field-solicitante input,
+fieldset.module .field-setor select,
+fieldset.module .field-local_cadastrado select {
+min-height: 36px;
+}
+
+fieldset.module .field-status select {
+min-height: 38px;
+font-weight: 600;
+}
+
+fieldset.module .field-numero .readonly {
+font-size: 16px;
+font-weight: 700;
+color: #123b70;
+}
+
+fieldset.module .field-operador_finalizacao .readonly {
+font-weight: 600;
+color: #40556e;
+}
+
+fieldset.module .field-data_finalizacao .readonly {
+color: #40556e;
+font-weight: 500;
+}
+
+fieldset.module .field-data_abertura .readonly,
+fieldset.module .field-data_atualizacao .readonly {
+color: #64748b;
+font-size: 13px;
+}
+
+/* =========================================
+REGISTROS DE ATENDIMENTO (INLINES)
+========================================= */
+
+.inline-group {
+background: white;
+border: 1px solid #dce5ef;
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 3px 12px rgba(24, 55, 90, 0.04);
+margin-bottom: 20px;
+}
+
+.inline-group h2 {
+background: #edf4fc;
+color: #123b70;
+border-bottom: 1px solid #dce5ef;
+padding: 13px 16px;
+font-size: 15px;
+font-weight: 600;
+}
+
+.inline-group table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.inline-group table thead th {
+background: #f2f6fb;
+color: #526b86;
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: .3px;
+padding: 11px 12px;
+border-bottom: 1px solid #dce5ef;
+text-align: left;
+}
+
+.inline-group table tbody td {
+padding: 12px;
+border-bottom: 1px solid #edf1f5;
+vertical-align: top;
+}
+
+.inline-group table tbody tr:hover {
+background: #f8fbff;
+}
+
+/* CORREÇÃO DO ENCAVAMENTO:
+Remove a renderização do título da chave estrangeira do Django dentro do inline */
+.inline-group .inline-related h3,
+.inline-group .inline-related h3 b,
+
+
+.inline-group .field-operador {
+width: 20%;
+}
+
+.inline-group .field-texto,
+.inline-group .field-ocorrencia {
+width: 55%;
+}
+
+.inline-group .field-data {
+width: 25%;
+}
+
+.inline-group .field-operador .readonly,
+.inline-group .field-data .readonly {
+display: block;
+padding: 6px 0;
+line-height: 1.4;
+color: #263b56;
+font-weight: 600;
+}
+
+.inline-group textarea {
+width: 100%;
+min-height: 70px;
+height: 80px;
+box-sizing: border-box;
+resize: vertical;
+line-height: 1.4;
+border: 1px solid #ccd7e3;
+border-radius: 7px;
+padding: 8px 10px;
+}
+
+.inline-group .add-row {
+padding: 12px 16px;
+background: #fcfdfe;
+}
+
+.inline-group .add-row a {
+color: #1478e8;
+font-weight: 600;
+text-decoration: none;
+}
+
+.inline-group .add-row a:hover {
+color: #0d5fc2;
+}
+
+.inline-group .delete {
+color: #b42318;
+}
+
+/* =========================================
+BARRA DE BOTÕES (SUBMIT ROW)
+========================================= */
+
+.submit-row {
+display: flex !important;
+align-items: center;
+gap: 10px;
+background: white;
+border: 1px solid #dce5ef;
+border-radius: 10px;
+padding: 14px 16px;
+margin-top: 20px;
+box-shadow: 0 3px 12px rgba(24, 55, 90, .04);
+}
+
+.submit-row input[type="submit"],
+.submit-row button {
+display: inline-block !important;
+width: auto !important;
+height: 38px !important;
+min-height: 38px !important;
+line-height: 1 !important;
+padding: 0 20px !important;
+border-radius: 7px !important;
+font-weight: 600 !important;
+font-size: 13px !important;
+cursor: pointer;
+box-sizing: border-box;
+margin: 0 !important;
+}
+
+/* Botão principal (Salvar) */
+.submit-row input[type="submit"].default,
+.submit-row input[name="_save"] {
+background: #1478e8 !important;
+border: 1px solid #1478e8 !important;
+color: white !important;
+}
+
+.submit-row input[type="submit"].default:hover,
+.submit-row input[name="_save"]:hover {
+background: #0d5fc2 !important;
+border-color: #0d5fc2 !important;
+}
+
+/* Botões Secundários */
+.submit-row input[name="_continue"],
+.submit-row input[name="_addanother"] {
+background: white !important;
+color: #1478e8 !important;
+border: 1px solid #ccd7e3 !important;
+}
+
+.submit-row input[name="_continue"]:hover,
+.submit-row input[name="_addanother"]:hover {
+background: #f2f7fd !important;
+border-color: #1478e8 !important;
+color: #0d5fc2 !important;
+}
+
+/* Botão Remover */
+.submit-row .deletelink-box {
+margin-left: auto;
+}
+
+.submit-row .deletelink {
+display: inline-flex !important;
+align-items: center;
+height: 38px !important;
+padding: 0 16px !important;
+background: #b42318 !important;
+color: white !important;
+border-radius: 7px !important;
+font-weight: 600 !important;
+font-size: 13px !important;
+text-decoration: none !important;
+box-sizing: border-box;
+}
+
+.submit-row .deletelink:hover {
+background: #911c13 !important;
+}
+
+/* Botão Adicionar Objeto Topo */
+.object-tools a {
+border-radius: 7px;
+font-weight: 600;
+background: #1478e8;
+padding: 8px 14px;
+}
+
+.object-tools a:hover {
+background: #0d5fc2;
+}

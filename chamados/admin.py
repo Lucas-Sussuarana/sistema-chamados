@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django.utils.html import format_html
 from .models import Chamado, Setor, Local, HistoricoChamado, RegistroAtendimento
 
 
@@ -55,9 +56,7 @@ class HistoricoChamadoInline(admin.TabularInline):
         "data",
     )
 
-
 class ChamadoAdminForm(forms.ModelForm):
-
     class Meta:
         model = Chamado
         fields = "__all__"
@@ -120,7 +119,7 @@ class ChamadoAdmin(admin.ModelAdmin):
         "solicitante",
         "setor",
         "local_cadastrado",
-        "status",
+        "status_visual",
         "data_abertura",
     )
 
@@ -148,6 +147,23 @@ class ChamadoAdmin(admin.ModelAdmin):
         "data_finalizacao",
         "operador_finalizacao",
     )
+
+    def status_visual(self, obj):
+        classes = {
+            "ABERTO": "status-aberto",
+            "ATENDIMENTO": "status-atendimento",
+            "FINALIZADO": "status-finalizado",
+        }
+
+        classe = classes.get(obj.status, "status-finalizado")
+
+        return format_html(
+            '<span class="admin-status {}">{}</span>',
+            classe,
+            obj.get_status_display(),
+        )
+
+    status_visual.short_description = "Status"
 
     def save_model(self, request, obj, form, change):
         if (

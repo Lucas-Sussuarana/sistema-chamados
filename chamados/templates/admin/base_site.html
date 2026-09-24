@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}
+    Amadeus System - Administração
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+
+    <link
+        rel="stylesheet"
+        href="{% static 'chamados/admin.css' %}"
+    >
+{% endblock %}
+
+{% block branding %}
+
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            Amadeus System
+        </a>
+    </h1>
+
+{% endblock %}
