@@ -737,3 +737,11 @@ padding: 8px 14px;
 .object-tools a:hover {
 background: #0d5fc2;
 }
+
+/* =========================================
+   OCULTAR BOTÃO DE TEMA DO DJANGO ADMIN
+========================================= */
+
+.theme-toggle {
+    display: none !important;
+}
