@@ -739,6 +739,50 @@ background: #0d5fc2;
 }
 
 /* =========================================
+   QUANTIDADE DE CHAMADOS POR PÁGINA
+========================================= */
+
+.quantidade-chamados {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 12px;
+    color: #526b86;
+    font-size: 13px;
+}
+
+.quantidade-chamados span {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.quantidade-chamados a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    border: 1px solid #ccd7e3;
+    border-radius: 6px;
+    background: white;
+    color: #1478e8;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.quantidade-chamados a:hover {
+    background: #f2f7fd;
+    border-color: #1478e8;
+}
+
+.quantidade-chamados a.ativo {
+    background: #1478e8;
+    border-color: #1478e8;
+    color: white;
+}
+
+/* =========================================
    OCULTAR BOTÃO DE TEMA DO DJANGO ADMIN
 ========================================= */
 

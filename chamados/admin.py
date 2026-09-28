@@ -79,6 +79,7 @@ class ChamadoAdmin(admin.ModelAdmin):
     class Media:
         js = (
             "chamados/auto_refresh.js",
+            "chamados/admin_linha_clicavel.js"
         )
     fieldsets = (
         (
@@ -191,6 +192,27 @@ class ChamadoAdmin(admin.ModelAdmin):
     inlines = (
             HistoricoChamadoInline,
             RegistroAtendimentoInline,
+        )
+    def get_list_per_page(self, request):
+        try:
+            quantidade = int(request.GET.get("per_page", 20))
+        except (TypeError, ValueError):
+            quantidade = 20
+
+        if quantidade not in [10, 20, 30, 40, 50]:
+            quantidade = 20
+
+        return quantidade
+
+    def changelist_view(self, request, extra_context=None):
+        if extra_context is None:
+            extra_context = {}
+
+        extra_context["quantidades_por_pagina"] = [10, 20, 30, 40, 50]
+
+        return super().changelist_view(
+            request,
+            extra_context=extra_context
         )
 
 

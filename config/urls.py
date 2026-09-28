@@ -40,4 +40,10 @@ urlpatterns = [
         views.verificar_novo_chamado,
         name="verificar_novo_chamado",
     ),
+
+    path(
+        "verificar-status-chamados/",
+        views.verificar_status_chamados,
+        name="verificar_status_chamados"
+    ),
 ]

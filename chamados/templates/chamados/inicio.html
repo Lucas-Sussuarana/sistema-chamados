@@ -1,4 +1,5 @@
 {% extends "chamados/base.html" %}
+{% load static %}
 
 {% block title %}Chamados T.I{% endblock %}
 
@@ -7,7 +8,6 @@
 {% block menu_inicio %}ativo{% endblock %}
 
 {% block extra_css %}
-
 <style>
 
     /* =========================================
@@ -352,7 +352,6 @@
     ========================================== */
 
     @media (max-width: 1000px) {
-
         .filtros-grid {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -360,12 +359,9 @@
         .campo-pesquisa {
             grid-column: span 2;
         }
-
     }
 
-
     @media (max-width: 600px) {
-
         .filtros-grid {
             grid-template-columns: 1fr;
         }
@@ -382,12 +378,9 @@
             width: 100%;
             justify-content: center;
         }
-
     }
 
-
     @media (max-width: 500px) {
-
         .card-body {
             padding: 18px;
         }
@@ -403,332 +396,258 @@
         .tabela-header {
             padding: 16px;
         }
+    }
 
+    .paginacao {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 16px 22px;
+        border-top: 1px solid #e6ebf1;
+        background: #fafbfd;
+    }
+
+    .paginacao-quantidade,
+    .paginacao-navegacao {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .paginacao-quantidade span {
+        color: #526b86;
+        font-size: 13px;
+        font-weight: 600;
+        margin-right: 4px;
+    }
+
+    .paginacao-quantidade a,
+    .paginacao-navegacao a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 32px;
+        padding: 0 9px;
+        border: 1px solid #ccd7e3;
+        border-radius: 6px;
+        background: white;
+        color: #1478e8;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .paginacao-quantidade a:hover,
+    .paginacao-navegacao a:hover {
+        background: #f2f7fd;
+        border-color: #1478e8;
+    }
+
+    .paginacao-quantidade a.ativo {
+        background: #1478e8;
+        border-color: #1478e8;
+        color: white;
+    }
+
+    .paginacao-navegacao span {
+        color: #526b86;
+        font-size: 13px;
+        margin: 0 5px;
+    }
+
+    @media (max-width: 600px) {
+        .paginacao {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .paginacao-quantidade,
+        .paginacao-navegacao {
+            justify-content: center;
+            flex-wrap: wrap;
+        }
     }
 
 </style>
-
 {% endblock %}
 
 
 {% block content %}
 
 <div class="titulo-area">
-
     <div>
-
-        <h1>
-            Chamados T.I
-        </h1>
-
-        <p>
-            Consulte, filtre e acompanhe os chamados do suporte.
-        </p>
-
+        <h1>Chamados T.I</h1>
+        <p>Consulte, filtre e acompanhe os chamados do suporte.</p>
     </div>
-
 </div>
-
 
 <div class="acoes-topo">
-
-    <a
-        href="{% url 'abrir_chamado' %}"
-        class="btn-novo"
-    >
-
-        <span class="btn-novo-icon">
-            ＋
-        </span>
-
+    <a href="{% url 'abrir_chamado' %}" class="btn-novo">
+        <span class="btn-novo-icon">＋</span>
         Abrir novo chamado
-
     </a>
-
 </div>
 
-
 <!-- FILTROS -->
-
 <div class="card">
-
     <div class="card-header">
-
-        <div class="card-header-icon">
-            ⌕
-        </div>
-
-        <h2>
-            Filtros de pesquisa
-        </h2>
-
+        <div class="card-header-icon">⌕</div>
+        <h2>Filtros de pesquisa</h2>
     </div>
 
-
     <div class="card-body">
-
         <form method="get">
-
             <div class="filtros-grid">
 
                 <!-- SETOR -->
-
                 <div class="campo">
-
-                    <label for="setor">
-                        Filtrar por Setor
-                    </label>
-
-                    <select
-                        name="setor"
-                        id="setor"
-                    >
-
-                        <option value="">
-                            Todos os setores
-                        </option>
-
+                    <label for="setor">Filtrar por Setor</label>
+                    <select name="setor" id="setor">
+                        <option value="">Todos os setores</option>
                         {% for setor in setores %}
-
-                            <option
-                                value="{{ setor.id }}"
-                                {% if request.GET.setor == setor.id|stringformat:"s" %}
-                                    selected
-                                {% endif %}
-                            >
-
+                            <option value="{{ setor.id }}" {% if request.GET.setor == setor.id|stringformat:"s" %}selected{% endif %}>
                                 {{ setor.nome }}
-
                             </option>
-
                         {% endfor %}
-
                     </select>
-
                 </div>
-
 
                 <!-- LOCAL -->
-
                 <div class="campo">
-
-                    <label for="local">
-                        Filtrar por Local
-                    </label>
-
-                    <select
-                        name="local"
-                        id="local"
-                    >
-
-                        <option value="">
-                            Todos os locais
-                        </option>
-
+                    <label for="local">Filtrar por Local</label>
+                    <select name="local" id="local">
+                        <option value="">Todos os locais</option>
                         {% for local in locais %}
-
-                            <option
-                                value="{{ local.id }}"
-                                {% if request.GET.local == local.id|stringformat:"s" %}
-                                    selected
-                                {% endif %}
-                            >
-
+                            <option value="{{ local.id }}" {% if request.GET.local == local.id|stringformat:"s" %}selected{% endif %}>
                                 {{ local.nome }}
-
                             </option>
-
                         {% endfor %}
-
                     </select>
-
                 </div>
-
 
                 <!-- STATUS -->
-
                 <div class="campo">
-
-                    <label for="status">
-                        Filtrar por Status
-                    </label>
-
-                    <select
-                        name="status"
-                        id="status"
-                    >
-
-                        <option
-                            value="abertos"
-                            {% if request.GET.status == "abertos" or not request.GET.status %}
-                                selected
-                            {% endif %}
-                        >
+                    <label for="status">Filtrar por Status</label>
+                    <select name="status" id="status">
+                        <option value="abertos" {% if request.GET.status == "abertos" or not request.GET.status %}selected{% endif %}>
                             Em aberto e atendimento
                         </option>
-
-                        <option
-                            value="finalizados"
-                            {% if request.GET.status == "finalizados" %}
-                                selected
-                            {% endif %}
-                        >
+                        <option value="finalizados" {% if request.GET.status == "finalizados" %}selected{% endif %}>
                             Finalizados
                         </option>
-
-                        <option
-                            value="todos"
-                            {% if request.GET.status == "todos" %}
-                                selected
-                            {% endif %}
-                        >
+                        <option value="todos" {% if request.GET.status == "todos" %}selected{% endif %}>
                             Todos
                         </option>
-
                     </select>
-
                 </div>
-
 
                 <!-- PESQUISA POR NOME -->
-
                 <div class="campo campo-pesquisa">
-
-                    <label for="solicitante">
-                        Pesquisar por nome
-                    </label>
-
-                    <input
-                        type="text"
-                        name="solicitante"
-                        id="solicitante"
-                        value="{{ request.GET.solicitante }}"
-                        placeholder="Digite o nome do solicitante"
-                    >
-
+                    <label for="solicitante">Pesquisar por nome</label>
+                    <input type="text" name="solicitante" id="solicitante" value="{{ request.GET.solicitante }}" placeholder="Digite o nome do solicitante">
                 </div>
 
-
                 <!-- BOTÃO -->
-
                 <div class="campo">
-
-                    <button
-                        type="submit"
-                        class="botao-filtrar"
-                    >
-                        FILTRAR
-                    </button>
-
+                    <button type="submit" class="botao-filtrar">FILTRAR</button>
                 </div>
 
             </div>
-
         </form>
-
     </div>
-
 </div>
 
-
 <!-- TABELA -->
-
 <div class="card">
 
     <div class="tabela-header">
-
-        <h2>
-            Chamados em aberto
-        </h2>
-
-        <span class="contador">
-            Lista de chamados
-        </span>
+        <h2>Chamados em aberto</h2>
 
     </div>
-
 
     <div class="tabela-container">
 
         <table>
 
             <thead>
-
                 <tr>
-
                     <th>Número</th>
                     <th>Solicitante</th>
                     <th>Setor</th>
                     <th>Local</th>
                     <th>Data</th>
                     <th>Status</th>
-
                 </tr>
-
             </thead>
-
 
             <tbody>
 
                 {% for chamado in chamados %}
 
-                    <tr>
+                    <tr data-chamado="{{ chamado.numero }}">
 
                         <td>
-
                             <a
                                 href="{% url 'consultar_chamado' chamado.numero %}"
                                 class="numero-chamado"
                             >
                                 #{{ chamado.numero }}
                             </a>
-
                         </td>
-
 
                         <td>
                             {{ chamado.solicitante }}
                         </td>
 
-
                         <td>
                             {{ chamado.setor.nome }}
                         </td>
-
 
                         <td>
                             {{ chamado.local_cadastrado.nome }}
                         </td>
 
-
                         <td>
                             {{ chamado.data_abertura|date:"d/m/Y H:i" }}
                         </td>
-
 
                         <td>
 
                             {% if chamado.status == "ABERTO" %}
 
-                                <span class="status status-aberto">
+                                <span
+                                    class="status status-aberto"
+                                    data-status="{{ chamado.status }}"
+                                >
                                     {{ chamado.get_status_display }}
                                 </span>
 
                             {% elif chamado.status == "ATENDIMENTO" %}
 
-                                <span class="status status-atendimento">
+                                <span
+                                    class="status status-atendimento"
+                                    data-status="{{ chamado.status }}"
+                                >
                                     {{ chamado.get_status_display }}
                                 </span>
 
                             {% elif chamado.status == "FINALIZADO" %}
 
-                                <span class="status status-finalizado">
+                                <span
+                                    class="status status-finalizado"
+                                    data-status="{{ chamado.status }}"
+                                >
                                     {{ chamado.get_status_display }}
                                 </span>
 
                             {% else %}
 
-                                <span class="status status-padrao">
+                                <span
+                                    class="status status-padrao"
+                                    data-status="{{ chamado.status }}"
+                                >
                                     {{ chamado.get_status_display }}
                                 </span>
 
@@ -741,20 +660,10 @@
                 {% empty %}
 
                     <tr>
-
-                        <td
-                            colspan="6"
-                            class="vazio"
-                        >
-
-                            <div class="vazio-icone">
-                                ▤
-                            </div>
-
+                        <td colspan="6" class="vazio">
+                            <div class="vazio-icone">▤</div>
                             Nenhum chamado em aberto.
-
                         </td>
-
                     </tr>
 
                 {% endfor %}
@@ -765,6 +674,71 @@
 
     </div>
 
+
+    <!-- PAGINAÇÃO -->
+
+    <div class="paginacao">
+
+        <div class="paginacao-quantidade">
+
+            <span>Exibir:</span>
+
+            {% for quantidade in quantidades_por_pagina %}
+
+                <a
+                    href="?setor={{ request.GET.setor }}&local={{ request.GET.local }}&status={{ request.GET.status }}&solicitante={{ request.GET.solicitante|urlencode }}&per_page={{ quantidade }}&page=1"
+                    class="{% if chamados.paginator.per_page == quantidade %}ativo{% endif %}"
+                >
+                    {{ quantidade }}
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="paginacao-navegacao">
+
+            {% if chamados.has_previous %}
+
+                <a
+                    href="?setor={{ request.GET.setor }}&local={{ request.GET.local }}&status={{ request.GET.status }}&solicitante={{ request.GET.solicitante|urlencode }}&per_page={{ chamados.paginator.per_page }}&page={{ chamados.previous_page_number }}"
+                >
+                    ← Anterior
+                </a>
+
+            {% endif %}
+
+
+            <span>
+                Página {{ chamados.number }} de {{ chamados.paginator.num_pages }}
+            </span>
+
+
+            {% if chamados.has_next %}
+
+                <a
+                    href="?setor={{ request.GET.setor }}&local={{ request.GET.local }}&status={{ request.GET.status }}&solicitante={{ request.GET.solicitante|urlencode }}&per_page={{ chamados.paginator.per_page }}&page={{ chamados.next_page_number }}"
+                >
+                    Próxima →
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
 </div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="{% static 'chamados/linha_clicavel.js' %}"></script>
+
+<script src="{% static 'chamados/atualizar_status.js' %}"></script>
 
 {% endblock %}

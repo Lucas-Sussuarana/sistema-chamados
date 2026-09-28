@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import JsonResponse
 from .models import Chamado, Setor, Local, HistoricoChamado
+from django.core.paginator import Paginator
 
 
 def inicio(request):
@@ -46,13 +47,29 @@ def inicio(request):
         ativo=True
     )
 
+    quantidade = request.GET.get("per_page", "20")
+
+    try:
+        quantidade = int(quantidade)
+    except ValueError:
+        quantidade = 20
+
+    if quantidade not in [10, 20, 30, 40, 50]:
+        quantidade = 20
+
+    paginator = Paginator(chamados_abertos, quantidade)
+    pagina = request.GET.get("page", 1)
+
+    chamados = paginator.get_page(pagina)
+
     return render(
         request,
         "chamados/inicio.html",
         {
             "setores": setores,
             "locais": locais,
-            "chamados": chamados_abertos,
+            "chamados": chamados,
+            "quantidades_por_pagina": [10, 20, 30, 40, 50],
         }
     )
 
@@ -155,4 +172,32 @@ def verificar_novo_chamado(request):
 
     return JsonResponse({
         "ultimo_numero": ultimo_chamado.numero if ultimo_chamado else 0
+    })
+
+def verificar_status_chamados(request):
+    chamados = Chamado.objects.select_related(
+        "setor",
+        "local_cadastrado",
+    ).all()
+
+    dados = []
+
+    for chamado in chamados:
+        dados.append({
+            "numero": chamado.numero,
+            "status": chamado.status,
+            "solicitante": chamado.solicitante,
+            "setor": chamado.setor.nome,
+            "local": (
+                chamado.local_cadastrado.nome
+                if chamado.local_cadastrado
+                else ""
+            ),
+            "data_abertura": chamado.data_abertura.strftime(
+                "%d/%m/%Y %H:%M"
+            ),
+        })
+
+    return JsonResponse({
+        "chamados": dados
     })
