@@ -37,7 +37,7 @@ def inicio(request):
     if local_id:
         chamados_abertos = chamados_abertos.filter(local_cadastrado_id=local_id)
 
-    chamados_abertos = chamados_abertos.order_by("data_abertura")
+    chamados_abertos = chamados_abertos.order_by("-data_abertura")
 
     setores = Setor.objects.filter(
         ativo=True

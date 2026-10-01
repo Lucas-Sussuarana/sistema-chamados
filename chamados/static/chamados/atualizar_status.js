@@ -109,7 +109,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         </td>
                     `;
 
-                    tbody.appendChild(novaLinha);
+                    tbody.insertBefore(
+                        novaLinha,
+                        tbody.firstChild
+                    );
 
                     return;
                 }

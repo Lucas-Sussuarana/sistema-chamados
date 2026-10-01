@@ -4,6 +4,43 @@ from django.utils.html import format_html
 from .models import Chamado, Setor, Local, HistoricoChamado, RegistroAtendimento
 
 
+# ==============================================================================
+# FILTROS CUSTOMIZADOS PARA AUTORIZAR OS PARÂMETROS GET E EVITAR O ERRO ?e=1
+# ==============================================================================
+class FiltroGenericoCustomizado(admin.SimpleListFilter):
+    title = ''
+
+    def lookups(self, request, model_admin):
+        val = request.GET.get(self.parameter_name)
+        # Só cria o lookup se houver um valor real diferente de vazio
+        if val and val.strip():
+            return ((val.strip(), val.strip()),)
+        return ()
+
+    def queryset(self, request, queryset):
+        # NUNCA filtra por aqui para não conflitar com o get_queryset do ModelAdmin
+        return queryset
+
+
+class SetorFiltro(FiltroGenericoCustomizado):
+    parameter_name = 'setor'
+
+
+class LocalFiltro(FiltroGenericoCustomizado):
+    parameter_name = 'local'
+
+
+class StatusFiltro(FiltroGenericoCustomizado):
+    parameter_name = 'status'
+
+
+class SolicitanteFiltro(FiltroGenericoCustomizado):
+    parameter_name = 'solicitante'
+
+
+# ==============================================================================
+# ADMINISTRAÇÃO DOS MODELOS AUXILIARES
+# ==============================================================================
 @admin.register(Setor)
 class SetorAdmin(admin.ModelAdmin):
     list_display = (
@@ -18,7 +55,6 @@ class SetorAdmin(admin.ModelAdmin):
     search_fields = (
         "nome",
     )
-
 
 
 @admin.register(Local)
@@ -40,7 +76,10 @@ class LocalAdmin(admin.ModelAdmin):
         "nome",
     )
 
-    
+
+# ==============================================================================
+# INLINES DO CHAMADO
+# ==============================================================================
 class HistoricoChamadoInline(admin.TabularInline):
     model = HistoricoChamado
     extra = 0
@@ -56,6 +95,18 @@ class HistoricoChamadoInline(admin.TabularInline):
         "data",
     )
 
+
+class RegistroAtendimentoInline(admin.TabularInline):
+    model = RegistroAtendimento
+    extra = 1
+    can_delete = False
+    fields = ("operador", "texto", "data")
+    readonly_fields = ("operador", "data")
+
+
+# ==============================================================================
+# FORMULÁRIO DO CHAMADO
+# ==============================================================================
 class ChamadoAdminForm(forms.ModelForm):
     class Meta:
         model = Chamado
@@ -66,21 +117,19 @@ class ChamadoAdminForm(forms.ModelForm):
         return cleaned_data
 
 
-class RegistroAtendimentoInline(admin.TabularInline):
-    model = RegistroAtendimento
-    extra = 1
-    can_delete = False
-    fields = ("operador", "texto", "data")
-    readonly_fields = ("operador", "data")
-
+# ==============================================================================
+# ADMINISTRAÇÃO PRINCIPAL DE CHAMADOS
+# ==============================================================================
 @admin.register(Chamado)
 class ChamadoAdmin(admin.ModelAdmin):
     form = ChamadoAdminForm
+
     class Media:
         js = (
             "chamados/auto_refresh.js",
             "chamados/admin_linha_clicavel.js"
         )
+
     fieldsets = (
         (
             "Informações do chamado",
@@ -114,7 +163,7 @@ class ChamadoAdmin(admin.ModelAdmin):
             },
         ),
     )
-    
+
     list_display = (
         "numero",
         "solicitante",
@@ -124,10 +173,13 @@ class ChamadoAdmin(admin.ModelAdmin):
         "data_abertura",
     )
 
+    # Adicionados os filtros neutros para autorizar os parâmetros do GET customizado
     list_filter = (
-        "status",
-        "setor",
         "data_abertura",
+        SetorFiltro,
+        LocalFiltro,
+        StatusFiltro,
+        SolicitanteFiltro,
     )
 
     search_fields = (
@@ -147,6 +199,11 @@ class ChamadoAdmin(admin.ModelAdmin):
         "data_atualizacao",
         "data_finalizacao",
         "operador_finalizacao",
+    )
+
+    inlines = (
+        HistoricoChamadoInline,
+        RegistroAtendimentoInline,
     )
 
     def status_visual(self, obj):
@@ -176,7 +233,6 @@ class ChamadoAdmin(admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
 
@@ -189,10 +245,6 @@ class ChamadoAdmin(admin.ModelAdmin):
 
         formset.save_m2m()
 
-    inlines = (
-            HistoricoChamadoInline,
-            RegistroAtendimentoInline,
-        )
     def get_list_per_page(self, request):
         try:
             quantidade = int(request.GET.get("per_page", 20))
@@ -204,11 +256,49 @@ class ChamadoAdmin(admin.ModelAdmin):
 
         return quantidade
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+
+        setor = request.GET.get("setor")
+        local = request.GET.get("local")
+        status = request.GET.get("status")
+        solicitante = request.GET.get("solicitante", "").strip()
+
+        if setor:
+            queryset = queryset.filter(setor_id=setor)
+
+        if local:
+            queryset = queryset.filter(local_cadastrado_id=local)
+
+        if status:
+            queryset = queryset.filter(status=status)
+
+        if solicitante:
+            queryset = queryset.filter(
+                solicitante__icontains=solicitante
+            )
+
+        return queryset
+
     def changelist_view(self, request, extra_context=None):
         if extra_context is None:
             extra_context = {}
 
+        # Dados para preencher os selects do formulário HTML
+        extra_context["setores_filtro"] = Setor.objects.filter(ativo=True)
+        extra_context["locais_filtro"] = Local.objects.filter(ativo=True)
+
+        # Preserva os valores selecionados no formulário
+        extra_context["filtros"] = {
+            "setor": request.GET.get("setor", ""),
+            "local": request.GET.get("local", ""),
+            "status": request.GET.get("status", ""),
+            "solicitante": request.GET.get("solicitante", ""),
+        }
+
+        # Demais configurações da tela
         extra_context["quantidades_por_pagina"] = [10, 20, 30, 40, 50]
+        extra_context["auto_refresh"] = True
 
         return super().changelist_view(
             request,
@@ -216,6 +306,9 @@ class ChamadoAdmin(admin.ModelAdmin):
         )
 
 
+# ==============================================================================
+# OUTRAS CONFIGURAÇÕES DE ADMIN
+# ==============================================================================
 @admin.register(HistoricoChamado)
 class HistoricoChamadoAdmin(admin.ModelAdmin):
     list_display = (
@@ -243,16 +336,6 @@ class HistoricoChamadoAdmin(admin.ModelAdmin):
         "data",
     )
 
-def changelist_view(self, request, extra_context=None):
-    if extra_context is None:
-        extra_context = {}
-
-    extra_context["auto_refresh"] = True
-
-    return super().changelist_view(
-        request,
-        extra_context=extra_context
-    )
 
 @admin.register(RegistroAtendimento)
 class RegistroAtendimentoAdmin(admin.ModelAdmin):
@@ -261,4 +344,3 @@ class RegistroAtendimentoAdmin(admin.ModelAdmin):
     search_fields = ("chamado__numero", "texto")
     ordering = ("-data",)
     readonly_fields = ("operador", "data")
-
