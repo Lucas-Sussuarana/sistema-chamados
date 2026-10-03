@@ -11,6 +11,8 @@ async function verificarChamados() {
 
         const dados = await resposta.json();
 
+        console.log("STATUS DOS CHAMADOS:", dados.chamados);
+
         /*
          * PRIMEIRA EXECUÇÃO
          *
@@ -106,19 +108,33 @@ function atualizarStatusNaTabela(chamado) {
             return;
         }
 
-        let textoStatus = "";
+        const configuracoes = {
+            "ABERTO": {
+                texto: "Aberto",
+                classe: "status-aberto"
+            },
+            "ATENDIMENTO": {
+                texto: "Em atendimento",
+                classe: "status-atendimento"
+            },
+            "FINALIZADO": {
+                texto: "Finalizado",
+                classe: "status-finalizado"
+            }
+        };
 
-        if (chamado.status === "ABERTO") {
-            textoStatus = "Aberto";
-        } else if (chamado.status === "ATENDIMENTO") {
-            textoStatus = "Em atendimento";
-        } else if (chamado.status === "FINALIZADO") {
-            textoStatus = "Finalizado";
+        const configuracao =
+            configuracoes[chamado.status];
+
+        if (!configuracao) {
+            return;
         }
 
         celulaStatus.innerHTML =
-            '<span class="admin-status">' +
-            textoStatus +
+            '<span class="admin-status ' +
+            configuracao.classe +
+            '">' +
+            configuracao.texto +
             '</span>';
     });
 }

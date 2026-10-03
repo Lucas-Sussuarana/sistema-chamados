@@ -86,21 +86,12 @@
                     </option>
 
                     <option
-                        value="ABERTO"
-                        {% if filtros.status == "ABERTO" %}
+                        value="ABERTO,ATENDIMENTO"
+                        {% if filtros.status == "ABERTO,ATENDIMENTO" %}
                             selected
                         {% endif %}
                     >
-                        Aberto
-                    </option>
-
-                    <option
-                        value="ATENDIMENTO"
-                        {% if filtros.status == "ATENDIMENTO" %}
-                            selected
-                        {% endif %}
-                    >
-                        Em atendimento
+                        Aberto / Em atendimento
                     </option>
 
                     <option

@@ -6,13 +6,12 @@
     <div class="quantidade-chamados">
         <span>Exibir:</span>
 
-        {% for quantidade in quantidades_por_pagina %}
-            <a
-                href="?per_page={{ quantidade }}"
-                class="{% if cl.paginator.per_page == quantidade %}ativo{% endif %}"
-            >
-                {{ quantidade }}
-            </a>
-        {% endfor %}
+        <a href="{% querystring per_page=10 %}" class="{% if filtros.per_page == 10 %}ativo{% endif %}">
+            10
+        </a>
+
+        <a href="{% querystring per_page=20 %}" class="{% if filtros.per_page == 20 %}ativo{% endif %}">
+            20
+        </a>
     </div>
 {% endblock %}

@@ -12,14 +12,14 @@ class FiltroGenericoCustomizado(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         val = request.GET.get(self.parameter_name)
-        # Só cria o lookup se houver um valor real diferente de vazio
-        if val and val.strip():
-            return ((val.strip(), val.strip()),)
+        if val is not None and str(val).strip() != '':
+            return ((str(val).strip(), str(val).strip()),)
         return ()
 
     def queryset(self, request, queryset):
-        # NUNCA filtra por aqui para não conflitar com o get_queryset do ModelAdmin
-        return queryset
+        # Retornando None garantimos que o Django Admin NÃO aplique filtros
+        # automáticos via banco, deixando o controle 100% no get_queryset()
+        return None
 
 
 class SetorFiltro(FiltroGenericoCustomizado):
@@ -36,6 +36,10 @@ class StatusFiltro(FiltroGenericoCustomizado):
 
 class SolicitanteFiltro(FiltroGenericoCustomizado):
     parameter_name = 'solicitante'
+
+
+class PerPageFiltro(FiltroGenericoCustomizado):
+    parameter_name = 'per_page'
 
 
 # ==============================================================================
@@ -173,13 +177,13 @@ class ChamadoAdmin(admin.ModelAdmin):
         "data_abertura",
     )
 
-    # Adicionados os filtros neutros para autorizar os parâmetros do GET customizado
     list_filter = (
         "data_abertura",
         SetorFiltro,
         LocalFiltro,
         StatusFiltro,
         SolicitanteFiltro,
+        PerPageFiltro,
     )
 
     search_fields = (
@@ -245,37 +249,31 @@ class ChamadoAdmin(admin.ModelAdmin):
 
         formset.save_m2m()
 
-    def get_list_per_page(self, request):
-        try:
-            quantidade = int(request.GET.get("per_page", 20))
-        except (TypeError, ValueError):
-            quantidade = 20
-
-        if quantidade not in [10, 20, 30, 40, 50]:
-            quantidade = 20
-
-        return quantidade
-
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
 
         setor = request.GET.get("setor")
         local = request.GET.get("local")
         status = request.GET.get("status")
-        solicitante = request.GET.get("solicitante", "").strip()
+        solicitante = request.GET.get("solicitante")
 
-        if setor:
-            queryset = queryset.filter(setor_id=setor)
+        if setor and str(setor).strip() != "":
+            queryset = queryset.filter(setor_id=str(setor).strip())
 
-        if local:
-            queryset = queryset.filter(local_cadastrado_id=local)
+        if local and str(local).strip() != "":
+            queryset = queryset.filter(local_cadastrado_id=str(local).strip())
 
-        if status:
-            queryset = queryset.filter(status=status)
+        if status and str(status).strip() != "":
+            status_val = str(status).strip()
+            if "," in status_val:
+                lista_status = [s.strip() for s in status_val.split(",") if s.strip()]
+                queryset = queryset.filter(status__in=lista_status)
+            else:
+                queryset = queryset.filter(status=status_val)
 
-        if solicitante:
+        if solicitante and str(solicitante).strip() != "":
             queryset = queryset.filter(
-                solicitante__icontains=solicitante
+                solicitante__icontains=str(solicitante).strip()
             )
 
         return queryset
@@ -284,20 +282,28 @@ class ChamadoAdmin(admin.ModelAdmin):
         if extra_context is None:
             extra_context = {}
 
-        # Dados para preencher os selects do formulário HTML
+        # Captura e valida a quantidade para paginação
+        try:
+            per_page = int(request.GET.get("per_page", 10))
+        except (TypeError, ValueError):
+            per_page = 10
+
+        if per_page not in [10, 20, 30, 40, 50]:
+            per_page = 10
+
+        # Aplica na propriedade nativa do Django Admin
+        self.list_per_page = per_page
+
+        # Contexto do template
         extra_context["setores_filtro"] = Setor.objects.filter(ativo=True)
         extra_context["locais_filtro"] = Local.objects.filter(ativo=True)
-
-        # Preserva os valores selecionados no formulário
         extra_context["filtros"] = {
             "setor": request.GET.get("setor", ""),
             "local": request.GET.get("local", ""),
             "status": request.GET.get("status", ""),
             "solicitante": request.GET.get("solicitante", ""),
+            "per_page": per_page,
         }
-
-        # Demais configurações da tela
-        extra_context["quantidades_por_pagina"] = [10, 20, 30, 40, 50]
         extra_context["auto_refresh"] = True
 
         return super().changelist_view(
