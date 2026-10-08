@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render
+from django.db.models import Q
 from django.http import JsonResponse
 from .models import Chamado, Setor, Local, HistoricoChamado
 from django.core.paginator import Paginator
@@ -11,33 +12,86 @@ def inicio(request):
     status_filtro = request.GET.get("status", "abertos")
     solicitante_filtro = request.GET.get("solicitante", "").strip()
 
-    # Se houver algum filtro de pesquisa, procura em todos os status.
-    if solicitante_filtro or setor_id or local_id:
-        chamados_abertos = Chamado.objects.all()
+    # =========================================================
+    # CHAMADOS
+    # =========================================================
+
+    if status_filtro == "abertos":
+
+        # Pega os IDs dos 5 últimos chamados finalizados
+        ultimos_finalizados = Chamado.objects.filter(
+            status="FINALIZADO"
+        ).order_by(
+            "-data_finalizacao",
+            "-data_abertura"
+        ).values("id")[:5]
+
+        # Mostra:
+        # - TODOS os chamados abertos
+        # - TODOS os chamados em atendimento
+        # - SOMENTE os 5 últimos finalizados
+        chamados_abertos = Chamado.objects.filter(
+            Q(status__in=["ABERTO", "ATENDIMENTO"]) |
+            Q(id__in=ultimos_finalizados)
+        )
 
     elif status_filtro == "finalizados":
-        chamados_abertos = Chamado.objects.filter(status="FINALIZADO")
+
+        # Quando o usuário escolher "Finalizados",
+        # continua mostrando todos os finalizados.
+        chamados_abertos = Chamado.objects.filter(
+            status="FINALIZADO"
+        )
 
     elif status_filtro == "todos":
+
+        # Quando escolher "Todos", mostra tudo.
         chamados_abertos = Chamado.objects.all()
 
     else:
+
         chamados_abertos = Chamado.objects.filter(
             status__in=["ABERTO", "ATENDIMENTO"]
         )
+
+    # =========================================================
+    # FILTRO POR NOME
+    # =========================================================
 
     if solicitante_filtro:
         chamados_abertos = chamados_abertos.filter(
             solicitante__icontains=solicitante_filtro
         )
 
+    # =========================================================
+    # FILTRO POR SETOR
+    # =========================================================
+
     if setor_id:
-        chamados_abertos = chamados_abertos.filter(setor_id=setor_id)
+        chamados_abertos = chamados_abertos.filter(
+            setor_id=setor_id
+        )
+
+    # =========================================================
+    # FILTRO POR LOCAL
+    # =========================================================
 
     if local_id:
-        chamados_abertos = chamados_abertos.filter(local_cadastrado_id=local_id)
+        chamados_abertos = chamados_abertos.filter(
+            local_cadastrado_id=local_id
+        )
 
-    chamados_abertos = chamados_abertos.order_by("-data_abertura")
+    # =========================================================
+    # ORDENAÇÃO
+    # =========================================================
+
+    chamados_abertos = chamados_abertos.order_by(
+        "-data_abertura"
+    )
+
+    # =========================================================
+    # SETORES E LOCAIS
+    # =========================================================
 
     setores = Setor.objects.filter(
         ativo=True
@@ -46,6 +100,10 @@ def inicio(request):
     locais = Local.objects.filter(
         ativo=True
     )
+
+    # =========================================================
+    # PAGINAÇÃO
+    # =========================================================
 
     quantidade = request.GET.get("per_page", "20")
 
@@ -57,10 +115,18 @@ def inicio(request):
     if quantidade not in [10, 20, 30, 40, 50]:
         quantidade = 20
 
-    paginator = Paginator(chamados_abertos, quantidade)
+    paginator = Paginator(
+        chamados_abertos,
+        quantidade
+    )
+
     pagina = request.GET.get("page", 1)
 
     chamados = paginator.get_page(pagina)
+
+    # =========================================================
+    # RENDER
+    # =========================================================
 
     return render(
         request,
