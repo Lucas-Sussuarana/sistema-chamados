@@ -12,41 +12,58 @@ def inicio(request):
     status_filtro = request.GET.get("status", "abertos")
     solicitante_filtro = request.GET.get("solicitante", "").strip()
 
+
     # =========================================================
-    # CHAMADOS
+    # CHAMADOS ABERTOS
     # =========================================================
 
     if status_filtro == "abertos":
 
-        # Pega os IDs dos 5 últimos chamados finalizados
+        # Pega os 5 chamados FINALIZADOS mais recentemente
         ultimos_finalizados = Chamado.objects.filter(
             status="FINALIZADO"
         ).order_by(
             "-data_finalizacao",
             "-data_abertura"
-        ).values("id")[:5]
+        ).values_list(
+            "id",
+            flat=True
+        )[:5]
+
 
         # Mostra:
-        # - TODOS os chamados abertos
-        # - TODOS os chamados em atendimento
-        # - SOMENTE os 5 últimos finalizados
+        # - todos os ABERTOS
+        # - todos os EM ATENDIMENTO
+        # - os 5 últimos FINALIZADOS
         chamados_abertos = Chamado.objects.filter(
             Q(status__in=["ABERTO", "ATENDIMENTO"]) |
-            Q(id__in=ultimos_finalizados)
+            Q(id__in=list(ultimos_finalizados))
         )
+
+
+    # =========================================================
+    # CHAMADOS FINALIZADOS
+    # =========================================================
 
     elif status_filtro == "finalizados":
 
-        # Quando o usuário escolher "Finalizados",
-        # continua mostrando todos os finalizados.
         chamados_abertos = Chamado.objects.filter(
             status="FINALIZADO"
         )
 
+
+    # =========================================================
+    # TODOS OS CHAMADOS
+    # =========================================================
+
     elif status_filtro == "todos":
 
-        # Quando escolher "Todos", mostra tudo.
         chamados_abertos = Chamado.objects.all()
+
+
+    # =========================================================
+    # FILTRO PADRÃO
+    # =========================================================
 
     else:
 
@@ -54,40 +71,67 @@ def inicio(request):
             status__in=["ABERTO", "ATENDIMENTO"]
         )
 
+
     # =========================================================
-    # FILTRO POR NOME
+    # FILTRO POR SOLICITANTE
     # =========================================================
 
     if solicitante_filtro:
+
         chamados_abertos = chamados_abertos.filter(
             solicitante__icontains=solicitante_filtro
         )
+
 
     # =========================================================
     # FILTRO POR SETOR
     # =========================================================
 
     if setor_id:
+
         chamados_abertos = chamados_abertos.filter(
             setor_id=setor_id
         )
+
 
     # =========================================================
     # FILTRO POR LOCAL
     # =========================================================
 
     if local_id:
+
         chamados_abertos = chamados_abertos.filter(
             local_cadastrado_id=local_id
         )
+
 
     # =========================================================
     # ORDENAÇÃO
     # =========================================================
 
-    chamados_abertos = chamados_abertos.order_by(
-        "-data_abertura"
-    )
+    if status_filtro == "abertos":
+
+        # Para a tela principal:
+        # chamados em aberto/em atendimento aparecem primeiro,
+        # depois os finalizados mais recentes.
+
+        chamados_abertos = chamados_abertos.order_by(
+            "-data_abertura"
+        )
+
+    elif status_filtro == "finalizados":
+
+        chamados_abertos = chamados_abertos.order_by(
+            "-data_finalizacao",
+            "-data_abertura"
+        )
+
+    else:
+
+        chamados_abertos = chamados_abertos.order_by(
+            "-data_abertura"
+        )
+
 
     # =========================================================
     # SETORES E LOCAIS
@@ -101,28 +145,56 @@ def inicio(request):
         ativo=True
     )
 
+
+    # =========================================================
+    # QUANTIDADE POR PÁGINA
+    # =========================================================
+
+    quantidade = request.GET.get(
+        "per_page",
+        "20"
+    )
+
+    try:
+
+        quantidade = int(
+            quantidade
+        )
+
+    except ValueError:
+
+        quantidade = 20
+
+
+    if quantidade not in [
+        10,
+        20,
+        30,
+        40,
+        50
+    ]:
+
+        quantidade = 20
+
+
     # =========================================================
     # PAGINAÇÃO
     # =========================================================
-
-    quantidade = request.GET.get("per_page", "20")
-
-    try:
-        quantidade = int(quantidade)
-    except ValueError:
-        quantidade = 20
-
-    if quantidade not in [10, 20, 30, 40, 50]:
-        quantidade = 20
 
     paginator = Paginator(
         chamados_abertos,
         quantidade
     )
 
-    pagina = request.GET.get("page", 1)
+    pagina = request.GET.get(
+        "page",
+        1
+    )
 
-    chamados = paginator.get_page(pagina)
+    chamados = paginator.get_page(
+        pagina
+    )
+
 
     # =========================================================
     # RENDER
@@ -135,7 +207,13 @@ def inicio(request):
             "setores": setores,
             "locais": locais,
             "chamados": chamados,
-            "quantidades_por_pagina": [10, 20, 30, 40, 50],
+            "quantidades_por_pagina": [
+                10,
+                20,
+                30,
+                40,
+                50
+            ],
         }
     )
 

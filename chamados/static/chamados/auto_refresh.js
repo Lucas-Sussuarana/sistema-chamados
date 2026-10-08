@@ -1,145 +1,282 @@
 let ultimoNumero = null;
 let statusAnteriores = {};
 
+
+/* =========================================================
+   VERIFICAR SE PRECISA FAZER O SEGUNDO REFRESH
+========================================================= */
+
+const parametros =
+    new URLSearchParams(window.location.search);
+
+const segundoRefresh =
+    parametros.get("segundo_refresh");
+
+
+if (segundoRefresh === "1") {
+
+    console.log(
+        "Segundo refresh programado. Aguardando 5 segundos..."
+    );
+
+
+    setTimeout(function () {
+
+        console.log(
+            "Executando segundo refresh..."
+        );
+
+
+        /*
+         * Remove o parâmetro antes do refresh
+         * para não ficar repetindo infinitamente.
+         */
+
+        const url =
+            new URL(window.location.href);
+
+        url.searchParams.delete(
+            "segundo_refresh"
+        );
+
+
+        window.location.href =
+            url.toString();
+
+    }, 5000);
+
+}
+
+
+/* =========================================================
+   VERIFICAR CHAMADOS
+========================================================= */
+
 async function verificarChamados() {
+
     try {
-        const resposta = await fetch("/verificar-status-chamados/");
+
+        const resposta = await fetch(
+            "/verificar-status-chamados/?t=" +
+            Date.now(),
+            {
+                cache: "no-store"
+            }
+        );
+
 
         if (!resposta.ok) {
             return;
         }
 
-        const dados = await resposta.json();
 
-        console.log("STATUS DOS CHAMADOS:", dados.chamados);
+        const dados =
+            await resposta.json();
 
-        /*
-         * PRIMEIRA EXECUÇÃO
-         *
-         * Apenas registra o estado atual dos chamados.
-         * Não altera a tela.
-         */
+
+        console.log(
+            "STATUS DOS CHAMADOS:",
+            dados.chamados
+        );
+
+
+        /* =================================================
+           PRIMEIRA EXECUÇÃO
+        ================================================= */
+
         if (ultimoNumero === null) {
-            dados.chamados.forEach(function (chamado) {
-                statusAnteriores[chamado.numero] = chamado.status;
-            });
 
-            if (dados.chamados.length > 0) {
-                ultimoNumero = Math.max(
-                    ...dados.chamados.map(chamado => chamado.numero)
-                );
+            dados.chamados.forEach(
+                function (chamado) {
+
+                    statusAnteriores[
+                        chamado.numero
+                    ] = chamado.status;
+
+                }
+            );
+
+
+            if (
+                dados.chamados.length > 0
+            ) {
+
+                ultimoNumero =
+                    Math.max(
+                        ...dados.chamados.map(
+                            chamado =>
+                                chamado.numero
+                        )
+                    );
+
             } else {
+
                 ultimoNumero = 0;
+
             }
 
+
             return;
         }
 
-        /*
-         * NOVOS CHAMADOS
-         */
-        const novoNumero = dados.chamados.length > 0
-            ? Math.max(...dados.chamados.map(chamado => chamado.numero))
-            : 0;
 
-        if (novoNumero > ultimoNumero) {
+        /* =================================================
+           VERIFICAR NOVO CHAMADO
+        ================================================= */
+
+        const novoNumero =
+            dados.chamados.length > 0
+                ? Math.max(
+                    ...dados.chamados.map(
+                        chamado =>
+                            chamado.numero
+                    )
+                )
+                : 0;
+
+
+        if (
+            novoNumero >
+            ultimoNumero
+        ) {
+
+            console.log(
+                "Novo chamado detectado. Atualizando..."
+            );
+
+
             window.location.reload();
+
             return;
+
         }
 
-        /*
-         * ALTERAÇÕES DE STATUS
-         */
-        dados.chamados.forEach(function (chamado) {
+
+        /* =================================================
+           VERIFICAR ALTERAÇÃO DE STATUS
+        ================================================= */
+
+        for (
+            const chamado of dados.chamados
+        ) {
 
             const statusAnterior =
-                statusAnteriores[chamado.numero];
+                statusAnteriores[
+                    chamado.numero
+                ];
+
 
             if (
                 statusAnterior !== undefined &&
-                statusAnterior !== chamado.status
+                statusAnterior !==
+                    chamado.status
             ) {
-                atualizarStatusNaTabela(chamado);
+
+                console.log(
+                    "STATUS ALTERADO:",
+                    "#" + chamado.numero,
+                    statusAnterior,
+                    "->",
+                    chamado.status
+                );
+
+
+                /* =========================================
+                   SE FOI FINALIZADO
+                ========================================= */
+
+                if (
+                    chamado.status ===
+                    "FINALIZADO"
+                ) {
+
+                    console.log(
+                        "Chamado finalizado."
+                    );
+
+                    console.log(
+                        "Primeiro refresh agora."
+                    );
+
+
+                    /*
+                     * Adiciona um parâmetro na URL
+                     * avisando a próxima página que
+                     * deverá fazer o segundo refresh.
+                     */
+
+                    const url =
+                        new URL(
+                            window.location.href
+                        );
+
+
+                    url.searchParams.set(
+                        "segundo_refresh",
+                        "1"
+                    );
+
+
+                    /*
+                     * PRIMEIRO REFRESH
+                     */
+
+                    window.location.href =
+                        url.toString();
+
+
+                    return;
+
+                }
+
+
+                /* =========================================
+                   OUTRAS ALTERAÇÕES DE STATUS
+                ========================================= */
+
+                console.log(
+                    "Status alterado. Atualizando..."
+                );
+
+
+                window.location.reload();
+
+                return;
+
             }
 
-            statusAnteriores[chamado.numero] = chamado.status;
-        });
 
-        ultimoNumero = novoNumero;
+            statusAnteriores[
+                chamado.numero
+            ] = chamado.status;
+
+        }
+
+
+        ultimoNumero =
+            novoNumero;
+
 
     } catch (erro) {
+
         console.error(
             "Erro ao verificar chamados:",
             erro
         );
+
     }
+
 }
 
 
-function atualizarStatusNaTabela(chamado) {
-
-    const linhas = document.querySelectorAll(
-        "#changelist .results tbody tr"
-    );
-
-    linhas.forEach(function (linha) {
-
-        const linkNumero =
-            linha.querySelector(".field-numero a");
-
-        if (!linkNumero) {
-            return;
-        }
-
-        const textoNumero =
-            linkNumero.textContent.trim();
-
-        const numero =
-            parseInt(textoNumero.replace("#", ""), 10);
-
-        if (numero !== chamado.numero) {
-            return;
-        }
-
-        const celulaStatus =
-            linha.querySelector(".field-status_visual");
-
-        if (!celulaStatus) {
-            return;
-        }
-
-        const configuracoes = {
-            "ABERTO": {
-                texto: "Aberto",
-                classe: "status-aberto"
-            },
-            "ATENDIMENTO": {
-                texto: "Em atendimento",
-                classe: "status-atendimento"
-            },
-            "FINALIZADO": {
-                texto: "Finalizado",
-                classe: "status-finalizado"
-            }
-        };
-
-        const configuracao =
-            configuracoes[chamado.status];
-
-        if (!configuracao) {
-            return;
-        }
-
-        celulaStatus.innerHTML =
-            '<span class="admin-status ' +
-            configuracao.classe +
-            '">' +
-            configuracao.texto +
-            '</span>';
-    });
-}
-
-
-setInterval(verificarChamados, 5000);
+/* =========================================================
+   INICIAR
+========================================================= */
 
 verificarChamados();
+
+
+setInterval(
+    verificarChamados,
+    5000
+);
