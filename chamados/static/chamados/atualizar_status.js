@@ -1,16 +1,25 @@
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
-       VERIFICAR SE EXISTE UM SEGUNDO RELOAD PENDENTE
+       CONFIGURAÇÃO DO FILTRO ATUAL
     ===================================================== */
 
-    const segundoReload =
-        sessionStorage.getItem(
-            "segundo_reload_chamado"
-        );
+    const parametrosURL = new URLSearchParams(
+        window.location.search
+    );
+
+    const statusFiltro =
+        parametrosURL.get("status") || "abertos";
 
 
-    if (segundoReload === "1") {
+    /* =====================================================
+       SEGUNDO RELOAD APÓS FINALIZAÇÃO
+    ===================================================== */
+
+    if (
+        sessionStorage.getItem("segundo_reload_chamado") === "1"
+    ) {
 
         setTimeout(function () {
 
@@ -26,10 +35,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =====================================================
-       VERIFICAR CHAMADOS
+       CONTROLE DE CONSULTAS
+    ===================================================== */
+
+    let numerosConhecidos = null;
+    let verificacaoEmAndamento = false;
+    let reloadSolicitado = false;
+
+
+    /* =====================================================
+       VERIFICAR CHAMADOS NO SERVIDOR
     ===================================================== */
 
     async function verificarStatus() {
+
+        if (
+            verificacaoEmAndamento ||
+            reloadSolicitado
+        ) {
+            return;
+        }
+
+        verificacaoEmAndamento = true;
 
         try {
 
@@ -41,30 +68,48 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             );
 
-
             if (!resposta.ok) {
                 return;
             }
 
+            const dados = await resposta.json();
 
-            const dados =
-                await resposta.json();
+            if (!Array.isArray(dados.chamados)) {
+                return;
+            }
 
 
-            const tabela =
-                document.querySelector(
-                    ".tabela-container table"
+            /* =================================================
+               PRIMEIRA CONSULTA
+               Registra os chamados existentes para que
+               não sejam confundidos com chamados novos.
+            ================================================= */
+
+            if (numerosConhecidos === null) {
+
+                numerosConhecidos = new Set(
+                    dados.chamados.map(
+                        chamado => String(chamado.numero)
+                    )
                 );
 
+                return;
+            }
+
+
+            /* =================================================
+               LOCALIZAR TABELA
+            ================================================= */
+
+            const tabela = document.querySelector(
+                ".tabela-container table"
+            );
 
             if (!tabela) {
                 return;
             }
 
-
-            const tbody =
-                tabela.querySelector("tbody");
-
+            const tbody = tabela.querySelector("tbody");
 
             if (!tbody) {
                 return;
@@ -72,66 +117,80 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /* =================================================
-               VERIFICAR CADA CHAMADO
+               VERIFICAR CHAMADOS RECEBIDOS
             ================================================= */
 
-            dados.chamados.forEach(function (chamado) {
+            for (const chamado of dados.chamados) {
 
-                let linha =
-                    document.querySelector(
-                        `tr[data-chamado="${chamado.numero}"]`
-                    );
+                const numero = String(chamado.numero);
+
+                const linha = tbody.querySelector(
+                    `tr[data-chamado="${numero}"]`
+                );
+
+                const numeroJaConhecido =
+                    numerosConhecidos.has(numero);
 
 
                 /* =================================================
-                   NOVO CHAMADO
+                   NOVO CHAMADO REAL
+                   Só considera números que não existiam
+                   na primeira consulta desta página.
                 ================================================= */
 
-                if (
-                    !linha &&
-                    (
-                        chamado.status === "ABERTO" ||
-                        chamado.status === "ATENDIMENTO"
-                    )
-                ) {
+                if (!numeroJaConhecido) {
 
-                    console.log(
-                        "Novo chamado detectado: #" +
-                        chamado.numero
-                    );
+                    numerosConhecidos.add(numero);
 
+                    const deveRecarregar =
+                        statusFiltro === "finalizados"
+                            ? chamado.status === "FINALIZADO"
+                            : statusFiltro === "todos"
+                                ? true
+                                : (
+                                    chamado.status === "ABERTO" ||
+                                    chamado.status === "ATENDIMENTO" ||
+                                    chamado.status === "FINALIZADO"
+                                );
 
-                    window.location.reload();
+                    if (deveRecarregar) {
 
-                    return;
+                        reloadSolicitado = true;
+
+                        window.location.reload();
+
+                        return;
+                    }
                 }
 
 
-                /*
-                 * Se o chamado não está na tabela,
-                 * não há nada para atualizar.
-                 */
+                /* =================================================
+                   SE A LINHA NÃO ESTÁ NA TABELA,
+                   NÃO TENTAR INSERIR OU RECARREGAR POR ISSO.
+                   Ela pode estar em outra página ou fora do filtro.
+                ================================================= */
 
                 if (!linha) {
-                    return;
+                    continue;
                 }
 
 
-                const status =
+                const elementoStatus =
                     linha.querySelector(".status");
 
-
-                if (!status) {
-                    return;
+                if (!elementoStatus) {
+                    continue;
                 }
 
 
                 const statusAtual =
-                    status.dataset.status;
+                    elementoStatus.dataset.status;
 
 
                 /* =================================================
-                   CHAMADO FINALIZADO
+                   CHAMADO FOI FINALIZADO
+                   Somente dispara o primeiro reload quando
+                   a linha estava na tabela e mudou de status.
                 ================================================= */
 
                 if (
@@ -139,22 +198,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     statusAtual !== "FINALIZADO"
                 ) {
 
-                    console.log(
-                        "Chamado finalizado: #" +
-                        chamado.numero
-                    );
-
-
-                    /*
-                     * Marca que após o primeiro reload
-                     * deverá ocorrer o segundo reload.
-                     */
+                    reloadSolicitado = true;
 
                     sessionStorage.setItem(
                         "segundo_reload_chamado",
                         "1"
                     );
-
 
                     window.location.reload();
 
@@ -166,11 +215,8 @@ document.addEventListener("DOMContentLoaded", function () {
                    STATUS NÃO MUDOU
                 ================================================= */
 
-                if (
-                    statusAtual === chamado.status
-                ) {
-
-                    return;
+                if (statusAtual === chamado.status) {
+                    continue;
                 }
 
 
@@ -178,63 +224,52 @@ document.addEventListener("DOMContentLoaded", function () {
                    ATUALIZAR STATUS VISUAL
                 ================================================= */
 
-                status.className =
-                    "status";
+                elementoStatus.className = "status";
 
+                if (chamado.status === "ABERTO") {
 
-                if (
-                    chamado.status === "ABERTO"
-                ) {
-
-                    status.classList.add(
+                    elementoStatus.classList.add(
                         "status-aberto"
                     );
 
-                    status.textContent =
-                        "Aberto";
-
+                    elementoStatus.textContent = "Aberto";
 
                 } else if (
                     chamado.status === "ATENDIMENTO"
                 ) {
 
-                    status.classList.add(
+                    elementoStatus.classList.add(
                         "status-atendimento"
                     );
 
-                    status.textContent =
+                    elementoStatus.textContent =
                         "Em atendimento";
-
 
                 } else if (
                     chamado.status === "FINALIZADO"
                 ) {
 
-                    status.classList.add(
+                    elementoStatus.classList.add(
                         "status-finalizado"
                     );
 
-                    status.textContent =
+                    elementoStatus.textContent =
                         "Finalizado";
-
 
                 } else {
 
-                    status.classList.add(
+                    elementoStatus.classList.add(
                         "status-padrao"
                     );
 
-                    status.textContent =
+                    elementoStatus.textContent =
                         chamado.status;
-
                 }
 
-
-                status.dataset.status =
+                elementoStatus.dataset.status =
                     chamado.status;
 
-            });
-
+            }
 
         } catch (erro) {
 
@@ -242,6 +277,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Erro ao verificar status dos chamados:",
                 erro
             );
+
+        } finally {
+
+            verificacaoEmAndamento = false;
 
         }
 

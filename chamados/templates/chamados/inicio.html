@@ -532,7 +532,7 @@
                     <label for="status">Filtrar por Status</label>
                     <select name="status" id="status">
                         <option value="abertos" {% if request.GET.status == "abertos" or not request.GET.status %}selected{% endif %}>
-                            Em aberto e atendimento
+                            Aberto/Atendimento
                         </option>
                         <option value="finalizados" {% if request.GET.status == "finalizados" %}selected{% endif %}>
                             Finalizados
