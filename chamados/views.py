@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, IntegerField
 from django.http import JsonResponse
 from .models import Chamado, Setor, Local, HistoricoChamado
 from django.core.paginator import Paginator
@@ -115,9 +115,18 @@ def inicio(request):
         # chamados em aberto/em atendimento aparecem primeiro,
         # depois os finalizados mais recentes.
 
-        chamados_abertos = chamados_abertos.order_by(
-            "-data_abertura"
-        )
+        chamados_abertos = chamados_abertos.annotate(
+    prioridade_status=Case(
+        When(status="ABERTO", then=Value(0)),
+        When(status="ATENDIMENTO", then=Value(0)),
+        When(status="FINALIZADO", then=Value(1)),
+        default=Value(2),
+        output_field=IntegerField(),
+    )
+).order_by(
+    "prioridade_status",
+    "-data_abertura"
+)
 
     elif status_filtro == "finalizados":
 
