@@ -1,752 +1,687 @@
 /* =========================================
-AMADEUS SYSTEM - DJANGO ADMIN
-========================================= */
+   AMADEUS SYSTEM - DJANGO ADMIN
+   Tema alinhado à tela de abertura de chamados dos usuários
+   ========================================= */
 
 /* =========================================
-FUNDO GERAL
-========================================= */
+   VARIÁVEIS (sobrescrevem as do base.css)
+   Inclui os seletores do modo escuro do Django
+   para o tema ficar sempre claro
+   ========================================= */
+
+:root,
+html,
+html:not([data-theme]),
+html[data-theme="light"],
+html[data-theme="dark"] {
+    color-scheme: light;
+
+    --ti-navy-900: #0b2447;
+    --ti-navy-800: #0f2f5f;
+    --ti-navy-700: #12294a;
+    --ti-title: #123b70;
+    --ti-blue: #1478e8;
+    --ti-blue-dark: #0d5fc2;
+    --ti-blue-soft: #e8f0fe;
+    --ti-bg: #f4f7fb;
+    --ti-border: #dce5ef;
+    --ti-text: #263b56;
+    --ti-muted: #64748b;
+
+    --primary: var(--ti-navy-800);
+    --secondary: var(--ti-navy-700);
+    --accent: var(--ti-blue);
+    --primary-fg: #fff;
+
+    --body-fg: var(--ti-text);
+    --body-bg: var(--ti-bg);
+    --body-quiet-color: var(--ti-muted);
+    --body-loud-color: var(--ti-title);
+
+    --header-color: var(--ti-muted);
+    --header-branding-color: var(--ti-title);
+    --header-bg: #fff;
+    --header-link-color: var(--ti-blue);
+
+    --breadcrumbs-fg: var(--ti-muted);
+    --breadcrumbs-link-fg: var(--ti-blue);
+    --breadcrumbs-bg: transparent;
+
+    --link-fg: var(--ti-blue);
+    --link-hover-color: var(--ti-blue-dark);
+    --link-selected-fg: var(--ti-blue);
+
+    --hairline-color: var(--ti-border);
+    --border-color: var(--ti-border);
+    --darkened-bg: #f7f9fc;
+    --selected-bg: var(--ti-blue-soft);
+    --selected-row: var(--ti-blue-soft);
+
+    --button-fg: #fff;
+    --button-bg: var(--ti-blue);
+    --button-hover-bg: var(--ti-blue-dark);
+    --default-button-bg: var(--ti-blue);
+    --default-button-hover-bg: var(--ti-blue-dark);
+    --close-button-bg: #6b7a90;
+    --close-button-hover-bg: #4f5d73;
+    --delete-button-bg: #b42318;
+    --delete-button-hover-bg: #911c13;
+
+    --object-tools-fg: #fff;
+    --object-tools-bg: var(--ti-blue);
+    --object-tools-hover-bg: var(--ti-blue-dark);
+}
+
+/* =========================================
+   FUNDO GERAL
+   ========================================= */
 
 body {
-background: #f4f7fb;
-color: #263b56;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    background: var(--ti-bg);
+    color: var(--ti-text);
 }
 
 /* =========================================
-CABEÇALHO
-========================================= */
+   CABEÇALHO (barra branca no topo)
+   ========================================= */
 
 #header {
-background: #123b70;
-color: white;
-border-bottom: 3px solid #1478e8;
+    background: #fff;
+    color: var(--ti-muted);
+    border-bottom: 1px solid var(--ti-border);
+    padding: 14px 32px;
 }
 
-/* =========================================
-NOME DO SISTEMA
-========================================= */
-
-#site-name a {
-color: white;
-font-size: 20px;
-font-weight: 600;
-text-decoration: none;
+#site-name a,
+#site-name a:link,
+#site-name a:visited {
+    color: var(--ti-title);
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
 }
 
 #site-name a:hover {
-color: white;
+    color: var(--ti-blue);
 }
-
-/* =========================================
-USUÁRIO / LINKS DO CABEÇALHO
-========================================= */
 
 #user-tools {
-color: #dce9f7;
+    color: var(--ti-muted);
 }
 
-#user-tools a {
-color: white;
+#user-tools a,
+#user-tools a:link,
+#user-tools a:visited {
+    color: var(--ti-blue);
+    border-bottom: none;
+    font-weight: bold;
 }
 
 #user-tools a:hover {
-color: #d7e8fb;
+    color: var(--ti-blue-dark);
 }
 
 /* =========================================
-TÍTULOS
-========================================= */
+   TÍTULOS
+   ========================================= */
 
 #content h1 {
-color: #123b70;
-font-weight: 600;
+    color: var(--ti-title);
+    font-size: 26px;
+    font-weight: 700;
+}
+
+#content h2 {
+    color: var(--ti-title);
 }
 
 /* =========================================
-BREADCRUMBS
-========================================= */
+   BREADCRUMBS
+   ========================================= */
 
 div.breadcrumbs {
-background: white;
-color: #64748b;
-border-bottom: 1px solid #dce5ef;
-padding: 12px 20px;
+    background: transparent;
+    color: var(--ti-muted);
+    border: none;
+    padding: 14px 32px 0;
 }
 
 div.breadcrumbs a {
-color: #1478e8;
+    color: var(--ti-blue);
 }
 
 div.breadcrumbs a:hover {
-color: #0d5fc2;
+    color: var(--ti-blue-dark);
 }
 
 /* =========================================
-CONTEÚDO
-========================================= */
+   CONTEÚDO
+   ========================================= */
 
 #content {
-padding: 25px;
+    padding: 20px 32px 40px;
 }
 
 /* =========================================
-MÓDULOS / BLOCOS
-========================================= */
+   MENU LATERAL (azul-marinho)
+   ========================================= */
+
+#nav-sidebar {
+    background: var(--ti-navy-800);
+    border-right: none;
+    border-top: none;
+    color: #fff;
+}
+
+#nav-sidebar .module {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+}
+
+#nav-sidebar #nav-filter {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #fff;
+}
+
+#nav-sidebar #nav-filter::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+#nav-sidebar caption,
+#nav-sidebar .module caption {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#nav-sidebar caption a.section,
+#nav-sidebar caption a.section:link,
+#nav-sidebar caption a.section:visited,
+#nav-sidebar .current-app .section:link,
+#nav-sidebar .current-app .section:visited {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 600;
+}
+
+#nav-sidebar .module th,
+#nav-sidebar .module td {
+    background: transparent;
+    border: none;
+}
+
+#nav-sidebar a,
+#nav-sidebar a:link,
+#nav-sidebar a:visited {
+    color: #dbe6f7;
+}
+
+#nav-sidebar tr:hover th,
+#nav-sidebar tr:hover td {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#nav-sidebar a:hover {
+    color: #fff;
+}
+
+#nav-sidebar tr.current-model th,
+#nav-sidebar tr.current-model td {
+    background: var(--ti-blue);
+}
+
+#nav-sidebar tr.current-model a {
+    color: #fff;
+    font-weight: 600;
+}
+
+#nav-sidebar .addlink {
+    color: #9fc3ff;
+}
+
+/* Correção: força o fundo transparente nas linhas do menu lateral.
+   Sem isso, o fundo branco de .module / tabelas aparece atrás do texto claro. */
+#nav-sidebar .module,
+#nav-sidebar table,
+#nav-sidebar tbody,
+#nav-sidebar tr,
+#nav-sidebar th,
+#nav-sidebar td {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#nav-sidebar th a,
+#nav-sidebar td a {
+    color: #dbe6f7 !important;
+}
+
+#nav-sidebar td a.addlink {
+    color: #9fc3ff !important;
+}
+
+#nav-sidebar tr:hover th,
+#nav-sidebar tr:hover td {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+#nav-sidebar tr.current-model th,
+#nav-sidebar tr.current-model td {
+    background: var(--ti-blue) !important;
+}
+
+#nav-sidebar tr.current-model a,
+#nav-sidebar tr.current-model a.addlink {
+    color: #fff !important;
+}
+
+.toggle-nav-sidebar {
+    background: var(--ti-navy-900);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* =========================================
+   MÓDULOS / BLOCOS (cards)
+   ========================================= */
 
 .module {
-border: 1px solid #dce5ef;
-border-radius: 10px;
-overflow: hidden;
-background: white;
-box-shadow: 0 3px 12px rgba(24, 55, 90, 0.05);
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, 0.06);
 }
 
 .module h2,
 .module caption {
-background: #edf4fc;
-color: #123b70;
+    background: #edf4fc;
+    color: var(--ti-title);
 }
 
 /* =========================================
-LINKS
-========================================= */
+   LINKS
+   ========================================= */
 
 a:link,
 a:visited {
-color: #1478e8;
+    color: var(--ti-blue);
 }
 
 a:hover {
-color: #0d5fc2;
+    color: var(--ti-blue-dark);
 }
 
 /* =========================================
-BOTÕES GERAIS
-========================================= */
+   BOTÕES GERAIS
+   ========================================= */
 
 .button,
 input[type="submit"],
 input[type="button"],
 .submit-row input,
 a.button {
-border-radius: 7px;
-font-weight: 600;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 /* =========================================
-TABELAS DE CHANGELIST
-========================================= */
-
-#changelist table {
-border-radius: 8px;
-overflow: hidden;
-}
-
-#changelist table thead th {
-background: #f2f6fb;
-}
-
-#changelist table thead th a {
-color: #40556e;
-}
-
-/* =========================================
-CAMPOS DE FORMULÁRIO GERAIS
-========================================= */
+   CAMPOS DE FORMULÁRIO GERAIS
+   ========================================= */
 
 input,
 textarea,
 select {
-border-radius: 6px;
+    border-radius: 8px;
+}
+
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+    border: 1px solid #ccd7e3;
+    background: #fff;
+    color: var(--ti-text);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-border-color: #1478e8;
+    border-color: var(--ti-blue);
+    box-shadow: 0 0 0 3px rgba(20, 120, 232, 0.15);
+    outline: none;
 }
 
 /* =========================================
-RODAPÉ
-========================================= */
+   RODAPÉ
+   ========================================= */
 
 #footer {
-background: transparent;
-color: #7a8da3;
+    background: transparent;
+    color: #7a8da3;
 }
 
 /* =========================================
-RESPONSIVO
-========================================= */
-
-@media (max-width: 800px) {
-#content {
-padding: 18px;
-}
-
-#site-name a {
-    font-size: 18px;
-}
-
-
-}
-
-/* =========================================
-LISTAGEM DE CHAMADOS (CHANGELIST)
-========================================= */
-
-#changelist {
-background: transparent;
-}
-
-#toolbar {
-background: white;
-border: 1px solid #dce5ef;
-border-radius: 10px;
-padding: 14px 16px;
-margin-bottom: 18px;
-box-shadow: 0 3px 12px rgba(24, 55, 90, 0.04);
-}
-
-#toolbar form {
-display: flex;
-align-items: center;
-gap: 8px;
-}
-
-#toolbar input[type="text"] {
-min-height: 36px;
-border: 1px solid #ccd7e3;
-border-radius: 7px;
-padding: 7px 11px;
-}
-
-#toolbar input[type="submit"] {
-min-height: 36px;
-background: #1478e8;
-border: 1px solid #1478e8;
-border-radius: 7px;
-color: white;
-padding: 7px 16px;
-font-weight: 600;
-transition: background .15s ease, border-color .15s ease;
-}
-
-#toolbar input[type="submit"]:hover {
-background: #0d5fc2;
-border-color: #0d5fc2;
-}
-
-#changelist .results {
-background: white;
-border: 1px solid #dce5ef;
-border-radius: 10px;
-overflow: hidden;
-box-shadow: 0 3px 12px rgba(24, 55, 90, 0.05);
-}
-
-#changelist .results table {
-width: 100%;
-border-collapse: collapse;
-}
-
-#changelist .results thead th {
-background: #f2f6fb;
-color: #526b86;
-border-bottom: 1px solid #dce5ef;
-padding: 13px 12px;
-font-size: 12px;
-text-transform: uppercase;
-letter-spacing: 0.3px;
-white-space: nowrap;
-}
-
-#changelist .results thead th a {
-color: #526b86;
-}
-
-#changelist .results thead th a:hover {
-color: #1478e8;
-}
-
-#changelist .results tbody tr {
-transition: background 0.15s ease;
-}
-
-#changelist .results tbody tr:hover {
-background: #f7faff;
-}
-
-#changelist .results tbody td {
-padding: 12px;
-border-bottom: 1px solid #edf1f5;
-color: #40556e;
-vertical-align: middle;
-}
-
-#changelist .results tbody tr:last-child td {
-border-bottom: none;
-}
-
-#changelist .field-numero a {
-color: #1478e8;
-font-weight: 700;
-font-size: 14px;
-}
-
-#changelist .field-numero a:hover {
-color: #0d5fc2;
-}
-
-#changelist .field-solicitante {
-font-weight: 500;
-color: #263b56;
-}
-
-#changelist .field-status {
-font-weight: 600;
-white-space: nowrap;
-}
-
-#changelist .field-data_abertura {
-white-space: nowrap;
-color: #64748b;
-font-size: 13px;
-}
-
-.paginator {
-margin-top: 18px;
-padding: 12px 16px;
-background: white;
-border: 1px solid #dce5ef;
-border-radius: 10px;
-color: #64748b;
-}
-
-.paginator a {
-color: #1478e8;
-}
-
-.paginator a:hover {
-color: #0d5fc2;
-}
-
-#changelist-filter {
-background: white;
-border-left: 1px solid #dce5ef;
-border-top: 1px solid #dce5ef;
-border-right: 1px solid #dce5ef;
-border-radius: 10px;
-overflow: hidden;
-}
-
-#changelist-filter h2 {
-background: #edf4fc;
-color: #123b70;
-padding: 12px 15px;
-}
-
-#changelist-filter h3 {
-color: #526b86;
-}
-
-#changelist-filter li {
-margin-bottom: 5px;
-}
-
-#changelist-filter a {
-color: #1478e8;
-}
-
-#changelist-filter a:hover {
-color: #0d5fc2;
-}
-
-.actions {
-background: white;
-border: 1px solid #dce5ef;
-border-radius: 10px;
-padding: 10px 12px;
-margin-bottom: 12px;
-}
-
-/* =========================================
-STATUS BADGES
-========================================= */
-
-.admin-status {
-display: inline-flex;
-align-items: center;
-gap: 7px;
-padding: 5px 10px;
-border-radius: 20px;
-font-size: 12px;
-font-weight: 600;
-white-space: nowrap;
-}
-
-.admin-status::before {
-content: "";
-width: 7px;
-height: 7px;
-border-radius: 50%;
-}
-
-.admin-status.status-aberto {
-background: #dff7eb;
-color: #07834e;
-}
-
-.admin-status.status-aberto::before {
-background: #0aa568;
-}
-
-.admin-status.status-atendimento {
-background: #fff1c9;
-color: #a56a00;
-}
-
-.admin-status.status-atendimento::before {
-background: #f0a500;
-}
-
-.admin-status.status-finalizado {
-background: #e5efff;
-color: #2364c4;
-}
-
-.admin-status.status-finalizado::before {
-background: #3478d4;
-}
-
-/* =========================================
-TELA DE EDIÇÃO DO CHAMADO (FORMULARIO)
-========================================= */
-
-fieldset.module {
-border: 1px solid #dce5ef;
-border-radius: 10px;
-background: white;
-overflow: hidden;
-box-shadow: 0 3px 12px rgba(24, 55, 90, 0.04);
-margin-bottom: 20px;
-}
-
-fieldset.module h2 {
-background: #edf4fc;
-color: #123b70;
-border-bottom: 1px solid #dce5ef;
-padding: 13px 16px;
-font-size: 15px;
-font-weight: 600;
-}
-
-fieldset.module .form-row {
-padding: 14px 18px;
-border-bottom: 1px solid #edf1f5;
-}
-
-fieldset.module .form-row:last-child {
-border-bottom: none;
-}
-
-fieldset.module label {
-color: #526b86;
-font-weight: 600;
-font-size: 13px;
-}
-
-fieldset.module input[type="text"],
-fieldset.module input[type="number"],
-fieldset.module input[type="datetime"],
-fieldset.module input[type="datetime-local"],
-fieldset.module select,
-fieldset.module textarea {
-border: 1px solid #ccd7e3;
-border-radius: 7px;
-padding: 8px 10px;
-color: #263b56;
-background: white;
-}
-
-fieldset.module input:focus,
-fieldset.module select:focus,
-fieldset.module textarea:focus {
-border-color: #1478e8;
-box-shadow: 0 0 0 2px rgba(20, 120, 232, 0.10);
-outline: none;
-}
-
-fieldset.module .readonly {
-color: #40556e;
-padding-top: 7px;
-}
-
-fieldset.module .help {
-color: #7a8da3;
-font-size: 12px;
-}
-
-fieldset.module .errors {
-border-radius: 6px;
-margin-bottom: 6px;
-}
-
-fieldset.module .field-descricao textarea {
-min-height: 130px;
-line-height: 1.5;
-resize: vertical;
-}
-
-fieldset.module .field-descricao label {
-display: block;
-margin-bottom: 6px;
-}
-
-fieldset.module .field-solicitante input,
-fieldset.module .field-setor select,
-fieldset.module .field-local_cadastrado select {
-min-height: 36px;
-}
-
-fieldset.module .field-status select {
-min-height: 38px;
-font-weight: 600;
-}
-
-fieldset.module .field-numero .readonly {
-font-size: 16px;
-font-weight: 700;
-color: #123b70;
-}
-
-fieldset.module .field-operador_finalizacao .readonly {
-font-weight: 600;
-color: #40556e;
-}
-
-fieldset.module .field-data_finalizacao .readonly {
-color: #40556e;
-font-weight: 500;
-}
-
-fieldset.module .field-data_abertura .readonly,
-fieldset.module .field-data_atualizacao .readonly {
-color: #64748b;
-font-size: 13px;
-}
-
-/* =========================================
-REGISTROS DE ATENDIMENTO (INLINES)
-========================================= */
-
-.inline-group {
-background: white;
-border: 1px solid #dce5ef;
-border-radius: 10px;
-overflow: hidden;
-box-shadow: 0 3px 12px rgba(24, 55, 90, 0.04);
-margin-bottom: 20px;
-}
-
-.inline-group h2 {
-background: #edf4fc;
-color: #123b70;
-border-bottom: 1px solid #dce5ef;
-padding: 13px 16px;
-font-size: 15px;
-font-weight: 600;
-}
-
-.inline-group table {
-width: 100%;
-border-collapse: collapse;
-}
-
-.inline-group table thead th {
-background: #f2f6fb;
-color: #526b86;
-font-size: 12px;
-text-transform: uppercase;
-letter-spacing: .3px;
-padding: 11px 12px;
-border-bottom: 1px solid #dce5ef;
-text-align: left;
-}
-
-.inline-group table tbody td {
-padding: 12px;
-border-bottom: 1px solid #edf1f5;
-vertical-align: top;
-}
-
-.inline-group table tbody tr:hover {
-background: #f8fbff;
-}
-
-/* CORREÇÃO DO ENCAVAMENTO:
-Remove a renderização do título da chave estrangeira do Django dentro do inline */
-.inline-group .inline-related h3,
-.inline-group .inline-related h3 b,
-
-
-.inline-group .field-operador {
-width: 20%;
-}
-
-.inline-group .field-texto,
-.inline-group .field-ocorrencia {
-width: 55%;
-}
-
-.inline-group .field-data {
-width: 25%;
-}
-
-.inline-group .field-operador .readonly,
-.inline-group .field-data .readonly {
-display: block;
-padding: 6px 0;
-line-height: 1.4;
-color: #263b56;
-font-weight: 600;
-}
-
-.inline-group textarea {
-width: 100%;
-min-height: 70px;
-height: 80px;
-box-sizing: border-box;
-resize: vertical;
-line-height: 1.4;
-border: 1px solid #ccd7e3;
-border-radius: 7px;
-padding: 8px 10px;
-}
-
-.inline-group .add-row {
-padding: 12px 16px;
-background: #fcfdfe;
-}
-
-.inline-group .add-row a {
-color: #1478e8;
-font-weight: 600;
-text-decoration: none;
-}
-
-.inline-group .add-row a:hover {
-color: #0d5fc2;
-}
-
-.inline-group .delete {
-color: #b42318;
-}
-
-/* =========================================
-BARRA DE BOTÕES (SUBMIT ROW)
-========================================= */
-
-.submit-row {
-display: flex !important;
-align-items: center;
-gap: 10px;
-background: white;
-border: 1px solid #dce5ef;
-border-radius: 10px;
-padding: 14px 16px;
-margin-top: 20px;
-box-shadow: 0 3px 12px rgba(24, 55, 90, .04);
-}
-
-.submit-row input[type="submit"],
-.submit-row button {
-display: inline-block !important;
-width: auto !important;
-height: 38px !important;
-min-height: 38px !important;
-line-height: 1 !important;
-padding: 0 20px !important;
-border-radius: 7px !important;
-font-weight: 600 !important;
-font-size: 13px !important;
-cursor: pointer;
-box-sizing: border-box;
-margin: 0 !important;
-}
-
-/* Botão principal (Salvar) */
-.submit-row input[type="submit"].default,
-.submit-row input[name="_save"] {
-background: #1478e8 !important;
-border: 1px solid #1478e8 !important;
-color: white !important;
-}
-
-.submit-row input[type="submit"].default:hover,
-.submit-row input[name="_save"]:hover {
-background: #0d5fc2 !important;
-border-color: #0d5fc2 !important;
-}
-
-/* Botões Secundários */
-.submit-row input[name="_continue"],
-.submit-row input[name="_addanother"] {
-background: white !important;
-color: #1478e8 !important;
-border: 1px solid #ccd7e3 !important;
-}
-
-.submit-row input[name="_continue"]:hover,
-.submit-row input[name="_addanother"]:hover {
-background: #f2f7fd !important;
-border-color: #1478e8 !important;
-color: #0d5fc2 !important;
-}
-
-/* Botão Remover */
-.submit-row .deletelink-box {
-margin-left: auto;
-}
-
-.submit-row .deletelink {
-display: inline-flex !important;
-align-items: center;
-height: 38px !important;
-padding: 0 16px !important;
-background: #b42318 !important;
-color: white !important;
-border-radius: 7px !important;
-font-weight: 600 !important;
-font-size: 13px !important;
-text-decoration: none !important;
-box-sizing: border-box;
-}
-
-.submit-row .deletelink:hover {
-background: #911c13 !important;
-}
-
-/* Botão Adicionar Objeto Topo */
-.object-tools a {
-border-radius: 7px;
-font-weight: 600;
-background: #1478e8;
-padding: 8px 14px;
+   BOTÃO "ADICIONAR CHAMADO" (topo)
+   ========================================= */
+
+.object-tools a,
+.object-tools a:link,
+.object-tools a:visited {
+    border-radius: 8px;
+    font-weight: 600;
+    background: var(--ti-blue);
+    color: #fff;
+    padding: 9px 16px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: small;
 }
 
 .object-tools a:hover {
-background: #0d5fc2;
+    background: var(--ti-blue-dark);
+}
+
+/* =========================================
+   LISTAGEM DE CHAMADOS (CHANGELIST)
+   ========================================= */
+
+#changelist {
+    background: transparent;
+}
+
+#toolbar {
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, 0.05);
+}
+
+#toolbar form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#toolbar input[type="text"] {
+    min-height: 36px;
+    border: 1px solid #ccd7e3;
+    border-radius: 8px;
+    padding: 7px 11px;
+}
+
+#toolbar input[type="submit"] {
+    min-height: 36px;
+    background: var(--ti-blue);
+    border: 1px solid var(--ti-blue);
+    border-radius: 8px;
+    color: #fff;
+    padding: 7px 16px;
+    font-weight: 600;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+#toolbar input[type="submit"]:hover {
+    background: var(--ti-blue-dark);
+    border-color: var(--ti-blue-dark);
+}
+
+#changelist .results {
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, 0.06);
+}
+
+#changelist .results table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* cabeçalho da tabela: azul-marinho */
+#changelist .results thead th,
+#changelist .results thead th.sorted {
+    background: var(--ti-navy-700);
+    color: #fff;
+    border: none;
+    padding: 14px 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+}
+
+#changelist .results thead th.sorted {
+    background: var(--ti-navy-800);
+}
+
+#changelist .results thead th a,
+#changelist .results thead th a:link,
+#changelist .results thead th a:visited,
+#changelist .results thead th .text a,
+#changelist .results thead th .text span {
+    color: #fff;
+}
+
+#changelist .results thead th a:hover {
+    color: #bcd6ff;
+}
+
+#changelist .results thead th .sortoptions a {
+    color: #fff;
+}
+
+/* linhas */
+#changelist .results tbody tr {
+    background: #fff;
+    transition: background 0.15s ease;
+}
+
+#changelist .results tbody tr:nth-child(even) {
+    background: #f9fbfe;
+}
+
+#changelist .results tbody tr:hover {
+    background: var(--ti-blue-soft);
+}
+
+#changelist .results tbody tr.selected {
+    background: var(--ti-blue-soft);
+}
+
+#changelist .results tbody td,
+#changelist .results tbody th {
+    padding: 13px 12px;
+    border-bottom: 1px solid #edf1f5;
+    color: #40556e;
+    vertical-align: middle;
+    background: transparent;
+}
+
+#changelist .results tbody tr:last-child td,
+#changelist .results tbody tr:last-child th {
+    border-bottom: none;
+}
+
+#changelist .field-numero a {
+    color: var(--ti-blue);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+#changelist .field-numero a:hover {
+    color: var(--ti-blue-dark);
+}
+
+#changelist .field-solicitante {
+    font-weight: 500;
+    color: var(--ti-text);
+}
+
+#changelist .field-status {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#changelist .field-data_abertura {
+    white-space: nowrap;
+    color: var(--ti-muted);
+    font-size: 13px;
+}
+
+/* paginação */
+.paginator {
+    margin-top: 18px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    color: var(--ti-muted);
+}
+
+.paginator a,
+.paginator a:link,
+.paginator a:visited {
+    color: var(--ti-blue);
+}
+
+.paginator a:hover {
+    color: var(--ti-blue-dark);
+}
+
+.paginator .this-page {
+    background: var(--ti-navy-700);
+    color: #fff;
+    border-radius: 6px;
+}
+
+/* filtro lateral do Django (por data de abertura) */
+#changelist-filter {
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, 0.05);
+}
+
+#changelist-filter h2 {
+    background: #edf4fc;
+    color: var(--ti-title);
+    padding: 12px 15px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+#changelist-filter h3 {
+    color: #526b86;
+}
+
+#changelist-filter li {
+    margin-bottom: 5px;
+}
+
+#changelist-filter a,
+#changelist-filter a:link,
+#changelist-filter a:visited {
+    color: var(--ti-blue);
+}
+
+#changelist-filter a:hover {
+    color: var(--ti-blue-dark);
+}
+
+#changelist-filter li.selected a {
+    color: var(--ti-blue);
+    font-weight: 700;
+}
+
+/* barra de ações em lote */
+#changelist-form .actions,
+.actions {
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    color: var(--ti-muted);
+}
+
+/* =========================================
+   STATUS BADGES
+   ========================================= */
+
+.admin-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.admin-status::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.admin-status.status-aberto {
+    background: #dff7eb;
+    color: #07834e;
+}
+
+.admin-status.status-aberto::before {
+    background: #0aa568;
+}
+
+.admin-status.status-atendimento {
+    background: #fff1c9;
+    color: #a56a00;
+}
+
+.admin-status.status-atendimento::before {
+    background: #f0a500;
+}
+
+.admin-status.status-finalizado {
+    background: #e5efff;
+    color: #2364c4;
+}
+
+.admin-status.status-finalizado::before {
+    background: #3478d4;
 }
 
 /* =========================================
    QUANTIDADE DE CHAMADOS POR PÁGINA
-========================================= */
+   ========================================= */
 
 .quantidade-chamados {
     display: flex;
     align-items: center;
     gap: 7px;
-    margin-top: 12px;
+    margin: 0 0 14px;
     color: #526b86;
     font-size: 13px;
 }
@@ -756,7 +691,9 @@ background: #0d5fc2;
     margin-right: 4px;
 }
 
-.quantidade-chamados a {
+.quantidade-chamados a,
+.quantidade-chamados a:link,
+.quantidade-chamados a:visited {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -764,35 +701,38 @@ background: #0d5fc2;
     height: 30px;
     padding: 0 8px;
     border: 1px solid #ccd7e3;
-    border-radius: 6px;
-    background: white;
-    color: #1478e8;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ti-blue);
     text-decoration: none;
     font-weight: 600;
 }
 
 .quantidade-chamados a:hover {
     background: #f2f7fd;
-    border-color: #1478e8;
+    border-color: var(--ti-blue);
 }
 
-.quantidade-chamados a.ativo {
-    background: #1478e8;
-    border-color: #1478e8;
-    color: white;
+.quantidade-chamados a.ativo,
+.quantidade-chamados a.ativo:link,
+.quantidade-chamados a.ativo:visited {
+    background: var(--ti-blue);
+    border-color: var(--ti-blue);
+    color: #fff;
 }
 
 /* =========================================
    OCULTAR BOTÃO DE TEMA DO DJANGO ADMIN
-========================================= */
+   ========================================= */
 
 .theme-toggle {
     display: none !important;
 }
 
-/* ================================
+/* =========================================
    FILTROS DA LISTA DE CHAMADOS
-   ================================ */
+   (Setor, Local, Status, Solicitante)
+   ========================================= */
 
 .filtros-chamados {
     margin: 15px 0 20px 0;
@@ -803,10 +743,11 @@ background: #0d5fc2;
     align-items: flex-end;
     gap: 12px;
     flex-wrap: wrap;
-    padding: 15px;
-    background: #f8f8f8;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, 0.05);
 }
 
 .filtro-campo {
@@ -817,16 +758,20 @@ background: #0d5fc2;
 
 .filtro-campo label {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 11px;
+    color: #526b86;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
 }
 
 .filtro-campo select,
 .filtro-campo input {
-    height: 36px;
+    height: 38px;
     padding: 6px 10px;
-    border: 1px solid #bbb;
-    border-radius: 4px;
+    border: 1px solid #ccd7e3;
+    border-radius: 8px;
     background: #fff;
+    color: var(--ti-text);
     box-sizing: border-box;
 }
 
@@ -845,22 +790,378 @@ background: #0d5fc2;
 }
 
 .filtro-acoes button {
-    height: 36px;
-    padding: 0 16px;
+    height: 38px;
+    padding: 0 18px;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    background: var(--ti-blue);
+    color: #fff;
     cursor: pointer;
     font-weight: 600;
 }
 
-.filtro-acoes a {
-    height: 36px;
+.filtro-acoes button:hover {
+    background: var(--ti-blue-dark);
+}
+
+.filtro-acoes a,
+.filtro-acoes a:link,
+.filtro-acoes a:visited {
+    height: 38px;
     padding: 0 14px;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    border: 1px solid #bbb;
-    border-radius: 4px;
+    border: 1px solid #ccd7e3;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ti-blue);
     text-decoration: none;
     font-weight: 600;
+}
+
+.filtro-acoes a:hover {
+    background: #f2f7fd;
+    border-color: var(--ti-blue);
+}
+
+/* =========================================
+   TELA DE EDIÇÃO DO CHAMADO (FORMULÁRIO)
+   ========================================= */
+
+fieldset.module {
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, 0.05);
+    margin-bottom: 20px;
+}
+
+fieldset.module h2 {
+    background: #edf4fc;
+    color: var(--ti-title);
+    border-bottom: 1px solid var(--ti-border);
+    padding: 13px 16px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+fieldset.module .form-row {
+    padding: 14px 18px;
+    border-bottom: 1px solid #edf1f5;
+}
+
+fieldset.module .form-row:last-child {
+    border-bottom: none;
+}
+
+fieldset.module label {
+    color: #526b86;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+fieldset.module input[type="text"],
+fieldset.module input[type="number"],
+fieldset.module input[type="datetime"],
+fieldset.module input[type="datetime-local"],
+fieldset.module select,
+fieldset.module textarea {
+    border: 1px solid #ccd7e3;
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--ti-text);
+    background: #fff;
+}
+
+fieldset.module input:focus,
+fieldset.module select:focus,
+fieldset.module textarea:focus {
+    border-color: var(--ti-blue);
+    box-shadow: 0 0 0 3px rgba(20, 120, 232, 0.15);
+    outline: none;
+}
+
+fieldset.module .readonly {
+    color: #40556e;
+    padding-top: 7px;
+}
+
+fieldset.module .help {
+    color: #7a8da3;
+    font-size: 12px;
+}
+
+fieldset.module .errors {
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+fieldset.module .field-descricao textarea {
+    min-height: 130px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+fieldset.module .field-descricao label {
+    display: block;
+    margin-bottom: 6px;
+}
+
+fieldset.module .field-solicitante input,
+fieldset.module .field-setor select,
+fieldset.module .field-local_cadastrado select {
+    min-height: 36px;
+}
+
+fieldset.module .field-status select {
+    min-height: 38px;
+    font-weight: 600;
+}
+
+fieldset.module .field-numero .readonly {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ti-title);
+}
+
+fieldset.module .field-operador_finalizacao .readonly {
+    font-weight: 600;
+    color: #40556e;
+}
+
+fieldset.module .field-data_finalizacao .readonly {
+    color: #40556e;
+    font-weight: 500;
+}
+
+fieldset.module .field-data_abertura .readonly,
+fieldset.module .field-data_atualizacao .readonly {
+    color: var(--ti-muted);
+    font-size: 13px;
+}
+
+/* =========================================
+   REGISTROS DE ATENDIMENTO (INLINES)
+   ========================================= */
+
+.inline-group {
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, 0.05);
+    margin-bottom: 20px;
+}
+
+.inline-group h2 {
+    background: #edf4fc;
+    color: var(--ti-title);
+    border-bottom: 1px solid var(--ti-border);
+    padding: 13px 16px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.inline-group table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inline-group table thead th {
+    background: var(--ti-navy-700);
+    color: #fff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    padding: 12px 12px;
+    border: none;
+    text-align: left;
+}
+
+.inline-group table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #edf1f5;
+    vertical-align: top;
+}
+
+.inline-group table tbody tr:hover {
+    background: #f8fbff;
+}
+
+/* CORREÇÃO DO ENCAVAMENTO:
+   Remove a renderização do título da chave estrangeira do Django dentro do inline.
+   (No arquivo original esta regra estava sem fechamento e "colava" na regra
+   .field-operador logo abaixo; agora está fechada corretamente.) */
+.inline-group .inline-related h3,
+.inline-group .inline-related h3 b {
+    display: none !important;
+}
+
+.inline-group .field-operador {
+    width: 20%;
+}
+
+.inline-group .field-texto,
+.inline-group .field-ocorrencia {
+    width: 55%;
+}
+
+.inline-group .field-data {
+    width: 25%;
+}
+
+.inline-group .field-operador .readonly,
+.inline-group .field-data .readonly {
+    display: block;
+    padding: 6px 0;
+    line-height: 1.4;
+    color: var(--ti-text);
+    font-weight: 600;
+}
+
+.inline-group textarea {
+    width: 100%;
+    min-height: 70px;
+    height: 80px;
+    box-sizing: border-box;
+    resize: vertical;
+    line-height: 1.4;
+    border: 1px solid #ccd7e3;
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.inline-group .add-row {
+    padding: 12px 16px;
+    background: #fcfdfe;
+}
+
+.inline-group .add-row a {
+    color: var(--ti-blue);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.inline-group .add-row a:hover {
+    color: var(--ti-blue-dark);
+}
+
+.inline-group .delete {
+    color: #b42318;
+}
+
+/* =========================================
+   BARRA DE BOTÕES (SUBMIT ROW)
+   ========================================= */
+
+.submit-row {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--ti-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(24, 55, 90, .05);
+}
+
+.submit-row input[type="submit"],
+.submit-row button {
+    display: inline-block !important;
+    width: auto !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    line-height: 1 !important;
+    padding: 0 20px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin: 0 !important;
+}
+
+/* Botão principal (Salvar) */
+.submit-row input[type="submit"].default,
+.submit-row input[name="_save"] {
+    background: var(--ti-blue) !important;
+    border: 1px solid var(--ti-blue) !important;
+    color: #fff !important;
+}
+
+.submit-row input[type="submit"].default:hover,
+.submit-row input[name="_save"]:hover {
+    background: var(--ti-blue-dark) !important;
+    border-color: var(--ti-blue-dark) !important;
+}
+
+/* Botões secundários */
+.submit-row input[name="_continue"],
+.submit-row input[name="_addanother"] {
+    background: #fff !important;
+    color: var(--ti-blue) !important;
+    border: 1px solid #ccd7e3 !important;
+}
+
+.submit-row input[name="_continue"]:hover,
+.submit-row input[name="_addanother"]:hover {
+    background: #f2f7fd !important;
+    border-color: var(--ti-blue) !important;
+    color: var(--ti-blue-dark) !important;
+}
+
+/* Botão remover */
+.submit-row .deletelink-box {
+    margin-left: auto;
+}
+
+.submit-row .deletelink {
+    display: inline-flex !important;
+    align-items: center;
+    height: 38px !important;
+    padding: 0 16px !important;
+    background: #b42318 !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    text-decoration: none !important;
+    box-sizing: border-box;
+}
+
+.submit-row .deletelink:hover {
+    background: #911c13 !important;
+}
+
+/* =========================================
+   MENSAGENS
+   ========================================= */
+
+ul.messagelist li {
+    border-radius: 10px;
+}
+
+/* =========================================
+   RESPONSIVO
+   ========================================= */
+
+@media (max-width: 800px) {
+    #header {
+        padding: 12px 18px;
+    }
+
+    #content {
+        padding: 18px;
+    }
+
+    div.breadcrumbs {
+        padding: 12px 18px 0;
+    }
+
+    #site-name a {
+        font-size: 18px;
+    }
 }
